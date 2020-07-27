@@ -5,21 +5,21 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.weather.localdatabase.model.CurrentWeather
-import com.example.weather.localdatabase.model.ExtendedWeather
+import com.example.weather.localdatabase.model.CurrentWeatherEntity
+import com.example.weather.localdatabase.model.ExtendedWeatherEntity
 
 @Dao
 interface WeatherDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCurrentWeather(currentWeather: CurrentWeather)
+    suspend fun insertCurrentWeather(currentWeatherEntity: CurrentWeatherEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertExtendedWeather(extendedWeather: ExtendedWeather)
+    suspend fun insertExtendedWeather(extendedWeatherEntity: ExtendedWeatherEntity)
 
     @Query(value = "Select * from current_weather")
-    fun getCurrentWeather(): LiveData<CurrentWeather>
+    fun getCurrentWeather(): LiveData<CurrentWeatherEntity>
 
     @Query(value = "Select * from extended_weather")
-    fun getExtendedWeather(): LiveData<ExtendedWeather>
+    fun getExtendedWeather(): LiveData<ExtendedWeatherEntity>
 }

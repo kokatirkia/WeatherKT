@@ -15,9 +15,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ExtendedInformationFragment : Fragment() {
-    private lateinit var weatherViewModel: WeatherViewModel
     private var _binding: ExtendedInformationBinding? = null
     private val binding get() = _binding!!
+    private lateinit var weatherViewModel: WeatherViewModel
+    private val recAdapter = RecAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,23 +34,23 @@ class ExtendedInformationFragment : Fragment() {
 
         weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
 
+        setUpRecyclerView()
         subscribeObserver()
+    }
+
+    private fun setUpRecyclerView() {
+        binding.recId.layoutManager = LinearLayoutManager(context)
+        binding.recId.adapter = recAdapter
     }
 
     private fun subscribeObserver() {
         weatherViewModel.getExtendedWeather().observe(viewLifecycleOwner, Observer {
-            if(it!=null) {
-                showData(it.extendedWeatherData)
-            }
+            it?.let { submitDataToRecyclerView(it.extendedWeatherData) }
         })
     }
 
-    private fun showData(extendedWeatherData: ExtendedWeatherData) {
-        binding.recId.layoutManager = LinearLayoutManager(context)
-        val recAdapter = RecAdapter()
-        binding.recId.adapter = recAdapter
+    private fun submitDataToRecyclerView(extendedWeatherData: ExtendedWeatherData) {
         recAdapter.submitList(extendedWeatherData.list)
-
         hideProgressBar()
     }
 

@@ -2,8 +2,8 @@ package com.example.weather.localdatabase
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.weather.localdatabase.model.CurrentWeather
-import com.example.weather.localdatabase.model.ExtendedWeather
+import com.example.weather.localdatabase.model.CurrentWeatherEntity
+import com.example.weather.localdatabase.model.ExtendedWeatherEntity
 import com.example.weather.networking.WeatherApi
 import com.example.weather.networking.model.Constants
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +15,8 @@ class WeatherRepository @Inject constructor(
     private val weatherDao: WeatherDao
 ) {
 
+    private var currentWeather: LiveData<CurrentWeatherEntity> = weatherDao.getCurrentWeather()
+    private var extendedWeather: LiveData<ExtendedWeatherEntity> = weatherDao.getExtendedWeather()
     private val apiResponseMessage = MutableLiveData<String>()
 
     suspend fun getWeatherFromApi() {
@@ -23,7 +25,7 @@ class WeatherRepository @Inject constructor(
         val currentWeather =
             weatherApi.getWeather(Constants.CITY, Constants.units, Constants.ApiKey)
         if (currentWeather.isSuccessful) {
-            currentWeather.body()?.let { CurrentWeather(1, it) }
+            currentWeather.body()?.let { CurrentWeatherEntity(1, it) }
                 ?.let {
                     insertCurrentWeather(it)
                 }
@@ -33,7 +35,7 @@ class WeatherRepository @Inject constructor(
         val extendedWeather =
             weatherApi.getWeatherLong(Constants.CITY, Constants.units, Constants.ApiKey)
         if (extendedWeather.isSuccessful) {
-            extendedWeather.body()?.let { ExtendedWeather(1, it) }
+            extendedWeather.body()?.let { ExtendedWeatherEntity(1, it) }
                 ?.let {
                     insertExtendedWeather(it)
                 }
@@ -43,23 +45,17 @@ class WeatherRepository @Inject constructor(
         }
     }
 
-    private suspend fun insertCurrentWeather(currentWeather: CurrentWeather) {
-        weatherDao.insertCurrentWeather(currentWeather)
+    private suspend fun insertCurrentWeather(currentWeatherEntity: CurrentWeatherEntity) {
+        weatherDao.insertCurrentWeather(currentWeatherEntity)
     }
 
-    private suspend fun insertExtendedWeather(extendedWeather: ExtendedWeather) {
-        weatherDao.insertExtendedWeather(extendedWeather)
+    private suspend fun insertExtendedWeather(extendedWeatherEntity: ExtendedWeatherEntity) {
+        weatherDao.insertExtendedWeather(extendedWeatherEntity)
     }
 
-    fun getCurrentWeather(): LiveData<CurrentWeather> {
-        return weatherDao.getCurrentWeather()
-    }
+    fun getCurrentWeather(): LiveData<CurrentWeatherEntity> = currentWeather
 
-    fun getExtendedWeather(): LiveData<ExtendedWeather> {
-        return weatherDao.getExtendedWeather()
-    }
+    fun getExtendedWeather(): LiveData<ExtendedWeatherEntity> = extendedWeather
 
-    fun getApiResponseMessage(): LiveData<String> {
-        return apiResponseMessage
-    }
+    fun getApiResponseMessage(): LiveData<String> = apiResponseMessage
 }

@@ -3,13 +3,13 @@ package com.example.weather.localdatabase
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.weather.localdatabase.model.CurrentWeather
-import com.example.weather.localdatabase.model.ExtendedWeather
+import com.example.weather.localdatabase.model.CurrentWeatherEntity
+import com.example.weather.localdatabase.model.ExtendedWeatherEntity
 import com.example.weather.localdatabase.typeconverter.CurrentWeatherConverter
 import com.example.weather.localdatabase.typeconverter.ExtendedWeatherConverter
 
 @Database(
-    entities = [(CurrentWeather::class), (ExtendedWeather::class)],
+    entities = [(CurrentWeatherEntity::class), (ExtendedWeatherEntity::class)],
     version = 6,
     exportSchema = false
 )

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.weather.databinding.MainInformationBinding
@@ -17,7 +18,6 @@ import java.text.SimpleDateFormat as SimpleDateFormat1
 
 @AndroidEntryPoint
 class MainInformationFragment : Fragment() {
-
     private lateinit var weatherViewModel: WeatherViewModel
     private var _binding: MainInformationBinding? = null
     private val binding get() = _binding!!
@@ -34,19 +34,15 @@ class MainInformationFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        weatherViewModel =
-            ViewModelProvider(this@MainInformationFragment).get(WeatherViewModel::class.java)
+        weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
 
         subscribeObserver()
     }
 
     private fun subscribeObserver() {
-        weatherViewModel.getCurrentWeather()
-            .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                if(it!=null) {
-                    showData(it.currentWeatherData)
-                }
-            })
+        weatherViewModel.getCurrentWeather().observe(viewLifecycleOwner, Observer {
+            it?.let { showData(it.currentWeatherData) }
+        })
     }
 
     private fun showData(currentWeatherData: CurrentWeatherData) {

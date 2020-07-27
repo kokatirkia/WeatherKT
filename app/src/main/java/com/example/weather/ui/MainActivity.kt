@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.weather.R
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.networking.model.Constants
 import com.example.weather.ui.fragments.ExtendedInformationFragment
@@ -19,22 +20,21 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     private lateinit var weatherViewModel: WeatherViewModel
     private lateinit var pref: SharedPreferences
-    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
         weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
         pref = applicationContext.getSharedPreferences("MyPref", 0)
-        val edit = pref.edit()
         Constants.CITY = pref.getString("city", "Tbilisi").toString()
 
-        fragmentAdapt()
+        setUpFragments()
         subscribeApiResponseMessageObserver()
         keyboardEnterClickEvent()
 
@@ -47,8 +47,7 @@ class MainActivity : AppCompatActivity() {
         binding.searchButton.setOnClickListener {
             if (binding.enterAddress.text.toString().isNotEmpty()) {
                 Constants.CITY = binding.enterAddress.text.toString()
-                edit.putString("city", binding.enterAddress.text.toString())
-                edit.apply()
+                pref.edit().putString("city", binding.enterAddress.text.toString()).apply()
                 hideKeyboard()
                 if (checkNetworkConnection()) {
                     fetchWeatherData()
@@ -101,9 +100,8 @@ class MainActivity : AppCompatActivity() {
         return activeNetwork?.isConnectedOrConnecting == true
     }
 
-    private fun fragmentAdapt() {
-        val adapter =
-            ViewPagerAdapter(supportFragmentManager)
+    private fun setUpFragments() {
+        val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(MainInformationFragment(), "Current")
         adapter.addFragment(ExtendedInformationFragment(), "5 days")
         binding.viewPager.adapter = adapter

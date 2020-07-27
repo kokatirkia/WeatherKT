@@ -7,7 +7,7 @@ import com.example.weather.localdatabase.typeconverter.CurrentWeatherConverter
 import com.example.weather.networking.model.CurrentWeatherData
 
 @Entity(tableName = "current_weather")
-data class CurrentWeather(
+data class CurrentWeatherEntity(
     @PrimaryKey
     var id: Int,
     @TypeConverters(CurrentWeatherConverter::class)

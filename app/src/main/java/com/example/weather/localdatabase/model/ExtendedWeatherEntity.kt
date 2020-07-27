@@ -7,7 +7,7 @@ import com.example.weather.localdatabase.typeconverter.ExtendedWeatherConverter
 import com.example.weather.networking.model.ExtendedWeatherData
 
 @Entity(tableName = "extended_weather")
-data class ExtendedWeather(
+data class ExtendedWeatherEntity(
     @PrimaryKey
     var id: Int,
     @TypeConverters(ExtendedWeatherConverter::class)

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weather.databinding.RowLayoutBinding
-import com.example.weather.networking.model.Constants
+import com.example.weather.utils.Constants
 import com.example.weather.networking.model.ExtendedWeather
 import java.text.SimpleDateFormat
 import java.util.*

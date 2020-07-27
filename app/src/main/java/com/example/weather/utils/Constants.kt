@@ -1,4 +1,4 @@
-package com.example.weather.networking.model
+package com.example.weather.utils
 
 //api url    https://api.openweathermap.org/data/2.5/weather?q=Tbilisi&units=metric&appid=64d498c46d9473b333472889203dac1d
 //api url for 5 days    http://api.openweathermap.org/data/2.5/forecast?q=tbilisi&units=metric&appid=64d498c46d9473b333472889203dac1d

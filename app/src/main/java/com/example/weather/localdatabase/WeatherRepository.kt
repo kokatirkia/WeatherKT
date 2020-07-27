@@ -5,14 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import com.example.weather.localdatabase.model.CurrentWeatherEntity
 import com.example.weather.localdatabase.model.ExtendedWeatherEntity
 import com.example.weather.networking.WeatherApi
-import com.example.weather.networking.model.Constants
+import com.example.weather.utils.Constants
+import com.example.weather.utils.NetworkHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
     private val weatherApi: WeatherApi,
-    private val weatherDao: WeatherDao
+    private val weatherDao: WeatherDao,
+    private val networkHelper: NetworkHelper
 ) {
 
     private var currentWeather: LiveData<CurrentWeatherEntity> = weatherDao.getCurrentWeather()
@@ -22,24 +24,27 @@ class WeatherRepository @Inject constructor(
     suspend fun getWeatherFromApi() {
         lateinit var responseMessage: String
 
-        val currentWeather =
-            weatherApi.getWeather(Constants.CITY, Constants.units, Constants.ApiKey)
-        if (currentWeather.isSuccessful) {
-            currentWeather.body()?.let { CurrentWeatherEntity(1, it) }
-                ?.let {
-                    insertCurrentWeather(it)
-                }
-            responseMessage = "success"
-        } else responseMessage = "!success"
+        if (networkHelper.isNetworkConnected()) {
+            val currentWeather =
+                weatherApi.getWeather(Constants.CITY, Constants.units, Constants.ApiKey)
+            if (currentWeather.isSuccessful) {
+                currentWeather.body()?.let { CurrentWeatherEntity(1, it) }
+                    ?.let {
+                        insertCurrentWeather(it)
+                    }
+                responseMessage = "success"
+            } else responseMessage = "!success"
 
-        val extendedWeather =
-            weatherApi.getWeatherLong(Constants.CITY, Constants.units, Constants.ApiKey)
-        if (extendedWeather.isSuccessful) {
-            extendedWeather.body()?.let { ExtendedWeatherEntity(1, it) }
-                ?.let {
-                    insertExtendedWeather(it)
-                }
-        }
+            val extendedWeather =
+                weatherApi.getWeatherLong(Constants.CITY, Constants.units, Constants.ApiKey)
+            if (extendedWeather.isSuccessful) {
+                extendedWeather.body()?.let { ExtendedWeatherEntity(1, it) }
+                    ?.let {
+                        insertExtendedWeather(it)
+                    }
+            }
+        } else responseMessage = "noInternetConnection"
+
         withContext(Dispatchers.Main) {
             apiResponseMessage.value = responseMessage
         }

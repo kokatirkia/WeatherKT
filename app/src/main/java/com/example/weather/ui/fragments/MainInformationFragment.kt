@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.weather.databinding.MainInformationBinding
-import com.example.weather.networking.model.Constants
+import com.example.weather.utils.Constants
 import com.example.weather.networking.model.CurrentWeatherData
 import com.example.weather.ui.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint

@@ -15,6 +15,7 @@ class WeatherViewModel @ViewModelInject constructor(private val weatherRepositor
 
     private var currentWeather: LiveData<CurrentWeatherEntity> = weatherRepository.getCurrentWeather()
     private var extendedWeather: LiveData<ExtendedWeatherEntity> = weatherRepository.getExtendedWeather()
+    private var apiResponseMessage: LiveData<String> = weatherRepository.getApiResponseMessage()
 
     fun fetchWeatherData() = viewModelScope.launch(Dispatchers.IO) {
         weatherRepository.getWeatherFromApi()
@@ -24,5 +25,5 @@ class WeatherViewModel @ViewModelInject constructor(private val weatherRepositor
 
     fun getExtendedWeather(): LiveData<ExtendedWeatherEntity> = extendedWeather
 
-    fun getApiResponseMessage(): LiveData<String> = weatherRepository.getApiResponseMessage()
+    fun getApiResponseMessage(): LiveData<String> = apiResponseMessage
 }

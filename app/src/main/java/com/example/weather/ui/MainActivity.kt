@@ -2,8 +2,6 @@ package com.example.weather.ui
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -12,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.ActivityMainBinding
-import com.example.weather.networking.model.Constants
+import com.example.weather.utils.Constants
 import com.example.weather.ui.fragments.ExtendedInformationFragment
 import com.example.weather.ui.fragments.MainInformationFragment
 import com.google.android.material.snackbar.Snackbar
@@ -38,22 +36,14 @@ class MainActivity : AppCompatActivity() {
         subscribeApiResponseMessageObserver()
         keyboardEnterClickEvent()
 
-        if (checkNetworkConnection()) {
-            fetchWeatherData()
-        } else {
-            showSnackbarMessage("No internet connection")
-        }
+        fetchWeatherData()
 
         binding.searchButton.setOnClickListener {
             if (binding.enterAddress.text.toString().isNotEmpty()) {
                 Constants.CITY = binding.enterAddress.text.toString()
                 pref.edit().putString("city", binding.enterAddress.text.toString()).apply()
                 hideKeyboard()
-                if (checkNetworkConnection()) {
-                    fetchWeatherData()
-                } else {
-                    showSnackbarMessage("No internet connection")
-                }
+                fetchWeatherData()
             }
         }
     }
@@ -62,7 +52,9 @@ class MainActivity : AppCompatActivity() {
         weatherViewModel.getApiResponseMessage().observe(this, Observer {
             if (it == "!success") {
                 showSnackbarMessage("City not found, enter valid city!")
-            } else showSnackbarMessage("Data updated!")
+            } else if (it == "noInternetConnection")
+                showSnackbarMessage("No internet connection!")
+            else showSnackbarMessage("Data updated!")
         })
     }
 
@@ -92,12 +84,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun fetchWeatherData() {
         weatherViewModel.fetchWeatherData()
-    }
-
-    private fun checkNetworkConnection(): Boolean {
-        val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
-        return activeNetwork?.isConnectedOrConnecting == true
     }
 
     private fun setUpFragments() {

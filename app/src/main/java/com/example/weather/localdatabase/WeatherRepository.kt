@@ -32,8 +32,8 @@ class WeatherRepository @Inject constructor(
                     ?.let {
                         insertCurrentWeather(it)
                     }
-                responseMessage = "success"
-            } else responseMessage = "!success"
+                responseMessage = "Data Updated!"
+            } else responseMessage = "City not found!"
 
             val extendedWeather =
                 weatherApi.getWeatherLong(Constants.CITY, Constants.units, Constants.ApiKey)
@@ -43,7 +43,7 @@ class WeatherRepository @Inject constructor(
                         insertExtendedWeather(it)
                     }
             }
-        } else responseMessage = "noInternetConnection"
+        } else responseMessage = "No internet connection!"
 
         withContext(Dispatchers.Main) {
             apiResponseMessage.value = responseMessage

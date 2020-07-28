@@ -10,9 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.ActivityMainBinding
-import com.example.weather.utils.Constants
 import com.example.weather.ui.fragments.ExtendedInformationFragment
 import com.example.weather.ui.fragments.MainInformationFragment
+import com.example.weather.utils.Constants
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -50,11 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun subscribeApiResponseMessageObserver() {
         weatherViewModel.getApiResponseMessage().observe(this, Observer {
-            if (it == "!success") {
-                showSnackbarMessage("City not found, enter valid city!")
-            } else if (it == "noInternetConnection")
-                showSnackbarMessage("No internet connection!")
-            else showSnackbarMessage("Data updated!")
+            if (it.isNotEmpty()) showSnackbarMessage(it)
         })
     }
 

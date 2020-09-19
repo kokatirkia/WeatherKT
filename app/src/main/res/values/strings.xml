@@ -12,4 +12,9 @@
     <string name="city">city</string>
     <string name="description">description</string>
     <string name="temp">15.C</string>
+    <string name="celsius_with_args">%1$s °C</string>
+    <string name="pressure_with_args">%1$d mBar</string>
+    <string name="humidity_with_args">%1$d %2$s</string>
+    <string name="speed_with_args">%1$s km/h</string>
+    <string name="feelsLike_celsius">Feels like: %1$s °C</string>
 </resources>

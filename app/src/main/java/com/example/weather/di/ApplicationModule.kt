@@ -1,6 +1,7 @@
 package com.example.weather.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.weather.localdatabase.WeatherDb
 import com.example.weather.networking.WeatherApi
@@ -18,6 +19,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(ApplicationComponent::class)
 class ApplicationModule {
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
+        context.getSharedPreferences("WeatherPreference", 0)
 
     @Singleton
     @Provides

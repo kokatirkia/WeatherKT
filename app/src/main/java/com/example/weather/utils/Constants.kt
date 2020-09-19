@@ -7,5 +7,5 @@ object Constants {
     var CITY: String = "Tbilisi"
     const val ApiKey: String = "64d498c46d9473b333472889203dac1d"
     const val units = "metric"
-    var iconUrl = "https://openweathermap.org/img/wn/"
+    const val iconUrl = "https://openweathermap.org/img/wn/"
 }

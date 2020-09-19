@@ -1,12 +1,12 @@
 package com.example.weather.localdatabase
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.weather.localdatabase.model.CurrentWeatherEntity
 import com.example.weather.localdatabase.model.ExtendedWeatherEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WeatherDao {
@@ -18,8 +18,8 @@ interface WeatherDao {
     suspend fun insertExtendedWeather(extendedWeatherEntity: ExtendedWeatherEntity)
 
     @Query(value = "Select * from current_weather")
-    fun getCurrentWeather(): LiveData<CurrentWeatherEntity>
+    fun getCurrentWeather(): Flow<CurrentWeatherEntity>
 
     @Query(value = "Select * from extended_weather")
-    fun getExtendedWeather(): LiveData<ExtendedWeatherEntity>
+    fun getExtendedWeather(): Flow<ExtendedWeatherEntity>
 }

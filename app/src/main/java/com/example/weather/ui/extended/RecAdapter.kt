@@ -1,4 +1,4 @@
-package com.example.weather.ui.fragments
+package com.example.weather.ui.extended
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weather.databinding.RowLayoutBinding
-import com.example.weather.utils.Constants
 import com.example.weather.networking.model.ExtendedWeather
+import com.example.weather.utils.Constants
 import java.text.SimpleDateFormat
 import java.util.*
 

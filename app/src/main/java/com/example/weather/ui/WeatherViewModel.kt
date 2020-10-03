@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.example.weather.localdatabase.model.CurrentWeatherEntity
 import com.example.weather.localdatabase.model.ExtendedWeatherEntity
 import com.example.weather.repository.WeatherRepository
+import com.example.weather.utils.Constants
 import com.example.weather.utils.NetworkHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ class WeatherViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             currentWeather = weatherRepository.geCurrentWeather().asLiveData()
             extendedWeather = weatherRepository.geExtendedWeather().asLiveData()
+            Constants.CITY = weatherRepository.getCityFromPreferences()
         }
     }
 
@@ -52,4 +54,8 @@ class WeatherViewModel @ViewModelInject constructor(
     fun getExtendedWeather(): LiveData<ExtendedWeatherEntity> = extendedWeather
 
     fun getApiResponseMessage(): LiveData<String> = apiResponseMessage
+
+    fun saveCityInPreferences(city: String) {
+        weatherRepository.saveCityInPreferences(city)
+    }
 }

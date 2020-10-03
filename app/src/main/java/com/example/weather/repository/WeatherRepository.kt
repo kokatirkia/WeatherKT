@@ -1,5 +1,6 @@
 package com.example.weather.repository
 
+import android.content.SharedPreferences
 import com.example.weather.localdatabase.WeatherDao
 import com.example.weather.localdatabase.model.CurrentWeatherEntity
 import com.example.weather.localdatabase.model.ExtendedWeatherEntity
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
     private val weatherDao: WeatherDao,
-    private val weatherApi: WeatherApi
+    private val weatherApi: WeatherApi,
+    private val sharedPreferences: SharedPreferences
 ) {
     suspend fun getCurrentWeatherFromApi(): Response<CurrentWeatherData> =
         weatherApi.getCurrentWeather(Constants.CITY, Constants.units, Constants.ApiKey)
@@ -35,5 +37,13 @@ class WeatherRepository @Inject constructor(
 
     fun geExtendedWeather(): Flow<ExtendedWeatherEntity> {
         return weatherDao.getExtendedWeather()
+    }
+
+    fun getCityFromPreferences(): String {
+        return sharedPreferences.getString("city", "Tbilisi").toString()
+    }
+
+    fun saveCityInPreferences(city: String) {
+        sharedPreferences.edit().putString("city", city).apply()
     }
 }

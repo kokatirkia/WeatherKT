@@ -1,7 +1,6 @@
 package com.example.weather.ui
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -15,12 +14,9 @@ import com.example.weather.ui.extended.ExtendedInformationFragment
 import com.example.weather.utils.Constants
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    @Inject
-    lateinit var preferences: SharedPreferences
     private lateinit var binding: ActivityMainBinding
     private lateinit var weatherViewModel: WeatherViewModel
 
@@ -30,22 +26,21 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-        Constants.CITY = preferences.getString("city", "Tbilisi").toString()
+        weatherViewModel.fetchWeatherData()
 
         setUpFragments()
         subscribeApiResponseMessageObserver()
-        keyboardEnterKeyClickEvent()
-        fetchWeatherData()
         setUpOnClickListener()
+        keyboardEnterKeyClickEvent()
     }
 
     private fun setUpOnClickListener() {
         binding.searchButton.setOnClickListener {
             if (binding.enterAddress.text.toString().isNotEmpty()) {
                 Constants.CITY = binding.enterAddress.text.toString()
-                preferences.edit().putString("city", binding.enterAddress.text.toString()).apply()
+                weatherViewModel.saveCityInPreferences(binding.enterAddress.text.toString())
+                weatherViewModel.fetchWeatherData()
                 hideKeyboard()
-                fetchWeatherData()
             }
         }
     }
@@ -78,10 +73,6 @@ class MainActivity : AppCompatActivity() {
                 false
             }
         }
-    }
-
-    private fun fetchWeatherData() {
-        weatherViewModel.fetchWeatherData()
     }
 
     private fun setUpFragments() {

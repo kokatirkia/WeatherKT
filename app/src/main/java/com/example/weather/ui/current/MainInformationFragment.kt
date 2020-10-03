@@ -32,11 +32,9 @@ class MainInformationFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-
         setUpObserver()
     }
 

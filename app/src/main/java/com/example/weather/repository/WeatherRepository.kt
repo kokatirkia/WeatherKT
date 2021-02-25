@@ -5,30 +5,50 @@ import com.example.weather.localdatabase.WeatherDao
 import com.example.weather.localdatabase.model.CurrentWeatherEntity
 import com.example.weather.localdatabase.model.ExtendedWeatherEntity
 import com.example.weather.networking.WeatherApi
-import com.example.weather.networking.model.CurrentWeatherData
-import com.example.weather.networking.model.ExtendedWeatherData
 import com.example.weather.utils.Constants
+import com.example.weather.utils.NetworkHelper
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
+import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
     private val weatherDao: WeatherDao,
     private val weatherApi: WeatherApi,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val networkHelper: NetworkHelper
 ) {
-    suspend fun getCurrentWeatherFromApi(): Response<CurrentWeatherData> =
-        weatherApi.getCurrentWeather(Constants.CITY, Constants.units, Constants.ApiKey)
-
-    suspend fun getExtendedWeatherFromApi(): Response<ExtendedWeatherData> =
-        weatherApi.getExtendedWeather(Constants.CITY, Constants.units, Constants.ApiKey)
-
-    suspend fun insertCurrentWeather(currentWeatherEntity: CurrentWeatherEntity) {
-        weatherDao.insertCurrentWeather(currentWeatherEntity)
+    init {
+        Constants.CITY = sharedPreferences.getString("city", "Tbilisi").toString()
     }
 
-    suspend fun insertExtendedWeather(extendedWeatherEntity: ExtendedWeatherEntity) {
-        weatherDao.insertExtendedWeather(extendedWeatherEntity)
+    private val responseFlow = MutableSharedFlow<String>()
+
+    suspend fun fetchWeatherData(city: String?) {
+        saveCityInPreferences(city)
+        if (networkHelper.isNetworkConnected()) {
+            val currentWeather =
+                weatherApi.getCurrentWeather(Constants.CITY, Constants.units, Constants.ApiKey)
+            if (currentWeather.isSuccessful) {
+                currentWeather.body()?.let { CurrentWeatherEntity(1, it) }
+                    ?.let {
+                        weatherDao.insertCurrentWeather(it)
+                        responseFlow.emit("Data Updated!")
+                    }
+            } else responseFlow.emit("City not found!")
+
+            val extendedWeather =
+                weatherApi.getExtendedWeather(Constants.CITY, Constants.units, Constants.ApiKey)
+            if (extendedWeather.isSuccessful) {
+                extendedWeather.body()?.let { ExtendedWeatherEntity(1, it) }
+                    ?.let {
+                        weatherDao.insertExtendedWeather(it)
+                    }
+            }
+        } else responseFlow.emit("No internet connection!")
+    }
+
+    fun getFlow(): MutableSharedFlow<String> {
+        return responseFlow
     }
 
     fun geCurrentWeather(): Flow<CurrentWeatherEntity> {
@@ -39,11 +59,8 @@ class WeatherRepository @Inject constructor(
         return weatherDao.getExtendedWeather()
     }
 
-    fun getCityFromPreferences(): String {
-        return sharedPreferences.getString("city", "Tbilisi").toString()
-    }
-
-    fun saveCityInPreferences(city: String) {
+    private fun saveCityInPreferences(city: String?) {
+        if (city != null) Constants.CITY = city
         sharedPreferences.edit().putString("city", city).apply()
     }
 }

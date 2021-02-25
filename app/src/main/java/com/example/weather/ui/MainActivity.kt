@@ -26,10 +26,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-        weatherViewModel.fetchWeatherData()
+        weatherViewModel.fetchWeatherData(null)
 
         setUpFragments()
-        subscribeApiResponseMessageObserver()
+        subscribeToResponseMessage()
         setUpOnClickListener()
         keyboardEnterKeyClickEvent()
     }
@@ -38,15 +38,14 @@ class MainActivity : AppCompatActivity() {
         binding.searchButton.setOnClickListener {
             if (binding.enterAddress.text.toString().isNotEmpty()) {
                 Constants.CITY = binding.enterAddress.text.toString()
-                weatherViewModel.saveCityInPreferences(binding.enterAddress.text.toString())
-                weatherViewModel.fetchWeatherData()
+                weatherViewModel.fetchWeatherData(binding.enterAddress.text.toString())
                 hideKeyboard()
             }
         }
     }
 
-    private fun subscribeApiResponseMessageObserver() {
-        weatherViewModel.getApiResponseMessage().observe(this, Observer {
+    private fun subscribeToResponseMessage() {
+        weatherViewModel.getResponseMessage().observe(this, Observer {
             if (it.isNotEmpty()) showSnackbarMessage(it)
         })
     }

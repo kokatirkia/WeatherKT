@@ -1,15 +1,13 @@
 package com.example.weather.ui
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.weather.localdatabase.model.CurrentWeatherEntity
 import com.example.weather.localdatabase.model.ExtendedWeatherEntity
 import com.example.weather.repository.WeatherRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 class WeatherViewModel @ViewModelInject constructor(
     private val weatherRepository: WeatherRepository
@@ -17,18 +15,26 @@ class WeatherViewModel @ViewModelInject constructor(
 
     private lateinit var currentWeather: LiveData<CurrentWeatherEntity>
     private lateinit var extendedWeather: LiveData<ExtendedWeatherEntity>
-    private lateinit var responseMessage: LiveData<String>
+    private val responseMessage: MutableLiveData<String> = MutableLiveData()
 
     init {
         viewModelScope.launch {
             currentWeather = weatherRepository.geCurrentWeather().asLiveData()
             extendedWeather = weatherRepository.geExtendedWeather().asLiveData()
-            responseMessage = weatherRepository.getFlow().asLiveData()
         }
     }
 
-    fun fetchWeatherData(city: String?) = viewModelScope.launch(Dispatchers.IO) {
-        weatherRepository.fetchWeatherData(city)
+    fun fetchWeatherData(city: String?) = viewModelScope.launch {
+        try {
+            weatherRepository.fetchWeatherData(city)
+            responseMessage.value = "Data updated"
+        } catch (throwable: Throwable) {
+            when (throwable) {
+                is IOException -> responseMessage.value = "No internet connection"
+                is HttpException -> responseMessage.value = "City not found!"
+                else -> responseMessage.value = "Error"
+            }
+        }
     }
 
     fun getCurrentWeather(): LiveData<CurrentWeatherEntity> = currentWeather

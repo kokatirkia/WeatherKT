@@ -14,30 +14,34 @@ class WeatherRepository @Inject constructor(
     private val weatherApi: WeatherApi,
     private val sharedPreferences: SharedPreferences
 ) {
-    init {
-        Constants.CITY = sharedPreferences.getString("city", "Tbilisi").toString()
-    }
+
+    fun currentWeather(): Flow<CurrentWeatherEntity> = weatherDao.getCurrentWeather()
+
+    fun extendedWeather(): Flow<ExtendedWeatherEntity> = weatherDao.getExtendedWeather()
 
     suspend fun fetchWeatherData(city: String?) {
         saveCityInPreferences(city)
-        val currentWeather =
-            weatherApi.getCurrentWeather(Constants.CITY, Constants.units, Constants.ApiKey)
+
+        val cityName = city ?: sharedPreferences.getString("city", "Tbilisi").toString()
+
+        val currentWeather = weatherApi.getCurrentWeather(
+            cityName,
+            Constants.units,
+            Constants.ApiKey
+        )
         weatherDao.insertCurrentWeather(CurrentWeatherEntity(1, currentWeather))
-        val extendedWeather =
-            weatherApi.getExtendedWeather(Constants.CITY, Constants.units, Constants.ApiKey)
+
+        val extendedWeather = weatherApi.getExtendedWeather(
+            cityName,
+            Constants.units,
+            Constants.ApiKey
+        )
         weatherDao.insertExtendedWeather(ExtendedWeatherEntity(1, extendedWeather))
     }
 
-    fun geCurrentWeather(): Flow<CurrentWeatherEntity> {
-        return weatherDao.getCurrentWeather()
-    }
-
-    fun geExtendedWeather(): Flow<ExtendedWeatherEntity> {
-        return weatherDao.getExtendedWeather()
-    }
-
     private fun saveCityInPreferences(city: String?) {
-        if (city != null) Constants.CITY = city
-        sharedPreferences.edit().putString("city", city).apply()
+        city?.let {
+            sharedPreferences.edit().putString("city", it).apply()
+        }
     }
 }

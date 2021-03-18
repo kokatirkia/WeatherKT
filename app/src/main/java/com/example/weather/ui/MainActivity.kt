@@ -11,7 +11,6 @@ import com.example.weather.R
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.ui.current.MainInformationFragment
 import com.example.weather.ui.extended.ExtendedInformationFragment
-import com.example.weather.utils.Constants
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,7 +25,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-        weatherViewModel.fetchWeatherData(null)
 
         setUpFragments()
         subscribeToResponseMessage()
@@ -37,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     private fun setUpOnClickListener() {
         binding.searchButton.setOnClickListener {
             if (binding.enterAddress.text.toString().isNotEmpty()) {
-                Constants.CITY = binding.enterAddress.text.toString()
                 weatherViewModel.fetchWeatherData(binding.enterAddress.text.toString())
                 hideKeyboard()
             }
@@ -45,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun subscribeToResponseMessage() {
-        weatherViewModel.getResponseMessage().observe(this, Observer {
+        weatherViewModel.responseMessage.observe(this, Observer {
             if (it.isNotEmpty()) showSnackbarMessage(it)
         })
     }

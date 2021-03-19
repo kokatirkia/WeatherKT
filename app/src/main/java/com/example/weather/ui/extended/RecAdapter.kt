@@ -45,19 +45,19 @@ class RecAdapter : ListAdapter<ExtendedWeather, RecAdapter.CustomViewHolder>(
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
         val extendedWeather = getItem(position)
-        holder.binding.timeId.text = SimpleDateFormat(
+        holder.binding.time.text = SimpleDateFormat(
             "EEE, d MMM HH:mm",
             Locale.ENGLISH
         ).format(Date(extendedWeather.dt * 1000))
-        holder.binding.tempExtendedid.text = extendedWeather.main.temp.toString() + "°C"
-        holder.binding.descriptionExtended.text =
+        holder.binding.temp.text = extendedWeather.main.temp.toString() + "°C"
+        holder.binding.description.text =
             extendedWeather.weather[0].description.capitalize()
-        holder.binding.pressureRec.text = extendedWeather.main.pressure + " mBar"
-        holder.binding.humidityRec.text = extendedWeather.main.humidity + "%"
-        holder.binding.windRec.text = extendedWeather.wind.speed.toString() + " km/h"
+        holder.binding.pressure.text = extendedWeather.main.pressure + " mBar"
+        holder.binding.humidity.text = extendedWeather.main.humidity + "%"
+        holder.binding.wind.text = extendedWeather.wind.speed.toString() + " km/h"
         Glide.with(holder.binding.root.context)
             .load(Constants.iconUrl + extendedWeather.weather[0].icon + ".png")
-            .into(holder.binding.reciconid)
+            .into(holder.binding.icon)
 
         val isExpandable: Boolean = getItem(position).expandable
         holder.binding.rowViewGroup.visibility = if (isExpandable) View.VISIBLE else View.GONE

@@ -9,9 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.ActivityMainBinding
-import com.example.weather.ui.current.MainInformationFragment
-import com.example.weather.ui.extended.ExtendedInformationFragment
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
 
-        setUpFragments()
+        setUpViewPager()
         subscribeToResponseMessage()
         setUpOnClickListener()
         keyboardEnterKeyClickEvent()
@@ -71,11 +70,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpFragments() {
-        val adapter = ViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(MainInformationFragment(), "Current")
-        adapter.addFragment(ExtendedInformationFragment(), "5 days")
-        binding.viewPager.adapter = adapter
-        binding.tabs.setupWithViewPager(binding.viewPager)
+    private fun setUpViewPager() {
+        binding.viewPager.adapter = ViewPagerAdapter(this)
+        binding.viewPager.offscreenPageLimit = 1
+        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> "CURRENT"
+                else -> "5 DAYS"
+            }
+        }.attach()
     }
 }

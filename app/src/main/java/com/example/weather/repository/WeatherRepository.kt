@@ -13,13 +13,13 @@ class WeatherRepository @Inject constructor(
     private val weatherDao: WeatherDao,
     private val weatherApi: WeatherApi,
     private val sharedPreferences: SharedPreferences
-) {
+) : Repository {
 
-    fun currentWeather(): Flow<CurrentWeatherEntity> = weatherDao.getCurrentWeather()
+    override fun currentWeather(): Flow<CurrentWeatherEntity> = weatherDao.getCurrentWeather()
 
-    fun extendedWeather(): Flow<ExtendedWeatherEntity> = weatherDao.getExtendedWeather()
+    override fun extendedWeather(): Flow<ExtendedWeatherEntity> = weatherDao.getExtendedWeather()
 
-    suspend fun fetchWeatherData(city: String?) {
+    override suspend fun fetchWeatherData(city: String?) {
         saveCityInPreferences(city)
 
         val cityName = city ?: sharedPreferences.getString("city", "Tbilisi").toString()
@@ -39,7 +39,7 @@ class WeatherRepository @Inject constructor(
         weatherDao.insertExtendedWeather(ExtendedWeatherEntity(1, extendedWeather))
     }
 
-    private fun saveCityInPreferences(city: String?) {
+    override fun saveCityInPreferences(city: String?) {
         city?.let {
             sharedPreferences.edit().putString("city", it).apply()
         }

@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.weather.localdatabase.WeatherDb
 import com.example.weather.networking.WeatherApi
+import com.example.weather.repository.Repository
+import com.example.weather.repository.WeatherRepository
 import com.example.weather.utils.Constants
 import dagger.Module
 import dagger.Provides
@@ -53,4 +55,8 @@ class ApplicationModule {
     @Singleton
     @Provides
     fun provideWeatherDao(db: WeatherDb) = db.weatherDao()
+
+    @Singleton
+    @Provides
+    fun provideRepository(weatherRepository: WeatherRepository): Repository = weatherRepository
 }

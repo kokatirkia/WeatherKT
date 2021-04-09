@@ -1,17 +1,19 @@
 package com.example.weather.data.repository
 
 import android.content.SharedPreferences
-import com.example.weather.utils.WeatherMapper
-import com.example.weather.domain.model.Weather
-import com.example.weather.domain.repository.Repository
 import com.example.weather.data.localdatabase.WeatherDao
 import com.example.weather.data.networking.WeatherApi
+import com.example.weather.domain.model.Weather
+import com.example.weather.domain.repository.Repository
 import com.example.weather.utils.Constants
+import com.example.weather.utils.WeatherMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class WeatherRepository @Inject constructor(
     private val weatherDao: WeatherDao,
     private val weatherApi: WeatherApi,

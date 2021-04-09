@@ -10,8 +10,6 @@ import com.bumptech.glide.Glide
 import com.example.weather.databinding.RowLayoutBinding
 import com.example.weather.ui.model.WeatherExtendedDataUi
 import com.example.weather.utils.Constants
-import java.text.SimpleDateFormat
-import java.util.*
 
 class RecAdapter : ListAdapter<WeatherExtendedDataUi, RecAdapter.CustomViewHolder>(
     DiffCallback()
@@ -22,7 +20,7 @@ class RecAdapter : ListAdapter<WeatherExtendedDataUi, RecAdapter.CustomViewHolde
             oldItem: WeatherExtendedDataUi,
             newItem: WeatherExtendedDataUi
         ): Boolean {
-            return oldItem.dt_txt == newItem.dt_txt
+            return oldItem.dtTxt == newItem.dtTxt
         }
 
         override fun areContentsTheSame(
@@ -48,22 +46,18 @@ class RecAdapter : ListAdapter<WeatherExtendedDataUi, RecAdapter.CustomViewHolde
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
         val extendedWeather = getItem(position)
-        holder.binding.time.text = SimpleDateFormat(
-            "EEE, d MMM HH:mm",
-            Locale.ENGLISH
-        ).format(Date(extendedWeather.dt * 1000))
-        holder.binding.temp.text = extendedWeather.main.temp.toString() + "°C"
-        holder.binding.description.text =
-            extendedWeather.weather[0].description.capitalize()
-        holder.binding.pressure.text = extendedWeather.main.pressure + " mBar"
-        holder.binding.humidity.text = extendedWeather.main.humidity + "%"
-        holder.binding.wind.text = extendedWeather.wind.speed.toString() + " km/h"
+        holder.binding.time.text = extendedWeather.dt
+        holder.binding.temp.text = extendedWeather.main.temp
+        holder.binding.description.text = extendedWeather.weather[0].description
+        holder.binding.pressure.text = extendedWeather.main.pressure
+        holder.binding.humidity.text = extendedWeather.main.humidity
+        holder.binding.wind.text = extendedWeather.wind.speed
         Glide.with(holder.binding.root.context)
-            .load(Constants.iconUrl + extendedWeather.weather[0].icon + ".png")
+            .load(Constants.iconUrl + extendedWeather.weather[0].icon)
             .into(holder.binding.icon)
 
-        val isExpandable: Boolean = getItem(position).expanded
-        holder.binding.rowViewGroup.visibility = if (isExpandable) View.VISIBLE else View.GONE
+        val isExpanded: Boolean = getItem(position).isExpanded
+        holder.binding.rowViewGroup.visibility = if (isExpanded) View.VISIBLE else View.GONE
 
     }
 
@@ -71,8 +65,8 @@ class RecAdapter : ListAdapter<WeatherExtendedDataUi, RecAdapter.CustomViewHolde
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.container.setOnClickListener {
-                val extendedW = getItem(adapterPosition)
-                extendedW.expanded = !extendedW.expanded
+                val extendedWeather = getItem(adapterPosition)
+                extendedWeather.isExpanded = !extendedWeather.isExpanded
                 notifyItemChanged(adapterPosition)
             }
         }

@@ -16,14 +16,14 @@ data class WeatherDescriptionUi(
 
 data class MainUi(
     var temp: String,
-    var feels_like: String,
-    var pressure: Int,
-    var humidity: Int
+    var feelsLike: String,
+    var pressure: String,
+    var humidity: String
 )
 
-data class WindUi(var speed: Double)
+data class WindUi(var speed: String)
 
 data class SysUi(
-    var sunrise: Long,
-    var sunset: Long
+    var sunrise: String,
+    var sunset: String
 )

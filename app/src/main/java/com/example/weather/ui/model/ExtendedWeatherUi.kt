@@ -5,15 +5,15 @@ data class ExtendedWeatherUi(
 )
 
 data class WeatherExtendedDataUi(
-    val dt: Long,
+    val dt: String,
     val main: MainExtendedUi,
-    val dt_txt: String,
+    val dtTxt: String,
     val weather: List<DescriptionExtendedUi>,
     val wind: WindExtendedUi,
-    var expanded: Boolean = false
+    var isExpanded: Boolean = false
 )
 
-data class WindExtendedUi(val speed: Double)
+data class WindExtendedUi(val speed: String)
 
 data class DescriptionExtendedUi(
     val description: String,
@@ -21,7 +21,7 @@ data class DescriptionExtendedUi(
 )
 
 data class MainExtendedUi(
-    val temp: Double,
+    val temp: String,
     val pressure: String,
     val humidity: String
 )

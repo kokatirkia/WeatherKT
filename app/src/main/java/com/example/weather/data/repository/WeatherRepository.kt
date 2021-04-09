@@ -6,7 +6,7 @@ import com.example.weather.data.networking.WeatherApi
 import com.example.weather.domain.model.Weather
 import com.example.weather.domain.repository.Repository
 import com.example.weather.utils.Constants
-import com.example.weather.utils.WeatherMapper
+import com.example.weather.data.repository.mapper.WeatherMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map

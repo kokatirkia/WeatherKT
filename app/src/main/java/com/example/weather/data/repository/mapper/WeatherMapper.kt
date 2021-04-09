@@ -1,10 +1,11 @@
-package com.example.weather.utils
+package com.example.weather.data.repository.mapper
 
-import com.example.weather.domain.model.*
 import com.example.weather.data.localdatabase.model.*
 import com.example.weather.data.networking.model.CurrentWeatherApi
 import com.example.weather.data.networking.model.ExtendedWeatherApi
-import com.example.weather.ui.model.*
+import com.example.weather.domain.model.*
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class WeatherMapper @Inject constructor() {
@@ -26,13 +27,6 @@ class WeatherMapper @Inject constructor() {
         )
     }
 
-    fun weatherDomainToWeatherUi(weather: Weather): WeatherUi {
-        return WeatherUi(
-            currentWeatherDomainToCurrentWeatherUi(weather.currentWeather),
-            extendedWeatherDomainToExtendedWeatherUi(weather.extendedWeather)
-        )
-    }
-
     private fun currentWeatherEntityToCurrentWeatherDomain(currentWeatherEntity: CurrentWeatherEntity): CurrentWeather {
         return CurrentWeather(
             currentWeatherEntity.weatherDescriptionEntity.map {
@@ -50,8 +44,14 @@ class WeatherMapper @Inject constructor() {
             ),
             Wind(currentWeatherEntity.windEntity.speed),
             Sys(
-                currentWeatherEntity.sysEntity.sunrise,
-                currentWeatherEntity.sysEntity.sunset
+                SimpleDateFormat(
+                    "hh:mm a",
+                    Locale.ENGLISH
+                ).format(Date(currentWeatherEntity.sysEntity.sunrise * 1000)),
+                SimpleDateFormat(
+                    "hh:mm a",
+                    Locale.ENGLISH
+                ).format(Date(currentWeatherEntity.sysEntity.sunset * 1000))
             ),
             currentWeatherEntity.name
         )
@@ -61,7 +61,10 @@ class WeatherMapper @Inject constructor() {
         return ExtendedWeather(
             extendedWeatherEntity.list.map {
                 WeatherExtendedData(
-                    it.dt,
+                    SimpleDateFormat(
+                        "EEE, d MMM HH:mm",
+                        Locale.ENGLISH
+                    ).format(Date(it.dt * 1000)),
                     MainExtended(
                         it.mainEntity.temp,
                         it.mainEntity.pressure,
@@ -87,7 +90,7 @@ class WeatherMapper @Inject constructor() {
             },
             MainEntity(
                 currentWeatherApi.main.temp,
-                currentWeatherApi.main.feels_like,
+                currentWeatherApi.main.feelsLike,
                 currentWeatherApi.main.pressure,
                 currentWeatherApi.main.humidity
             ),
@@ -107,7 +110,7 @@ class WeatherMapper @Inject constructor() {
                 WeatherExtendedDataEntity(
                     it.dt,
                     MainExtendedEntity(it.main.temp, it.main.pressure, it.main.humidity),
-                    it.dt_txt,
+                    it.dtTxt,
                     it.weather.map { description ->
                         DescriptionExtendedEntity(
                             description.description,
@@ -115,50 +118,6 @@ class WeatherMapper @Inject constructor() {
                         )
                     },
                     WindExtendedEntity(it.wind.speed)
-                )
-            }
-        )
-    }
-
-    private fun currentWeatherDomainToCurrentWeatherUi(currentWeather: CurrentWeather): CurrentWeatherUi {
-        return CurrentWeatherUi(
-            currentWeather.weatherDescription.map {
-                WeatherDescriptionUi(it.main, it.description, it.icon)
-            },
-            MainUi(
-                currentWeather.main.temp,
-                currentWeather.main.feels_like,
-                currentWeather.main.pressure,
-                currentWeather.main.humidity
-            ),
-            WindUi(currentWeather.wind.speed),
-            SysUi(
-                currentWeather.sys.sunrise,
-                currentWeather.sys.sunset
-            ),
-            currentWeather.name
-        )
-    }
-
-    private fun extendedWeatherDomainToExtendedWeatherUi(extendedWeather: ExtendedWeather): ExtendedWeatherUi {
-        return ExtendedWeatherUi(
-            extendedWeather.list.map {
-                WeatherExtendedDataUi(
-                    it.dt,
-                    MainExtendedUi(
-                        it.main.temp,
-                        it.main.pressure,
-                        it.main.humidity
-                    ),
-                    it.dt_txt,
-                    it.weather.map { description ->
-                        DescriptionExtendedUi(
-                            description.description,
-                            description.icon
-                        )
-                    },
-                    WindExtendedUi(it.wind.speed),
-                    expanded = false
                 )
             }
         )

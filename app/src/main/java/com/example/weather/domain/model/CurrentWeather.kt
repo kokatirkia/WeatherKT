@@ -16,7 +16,7 @@ data class WeatherDescription(
 
 data class Main(
     var temp: String,
-    var feels_like: String,
+    var feelsLike: String,
     var pressure: Int,
     var humidity: Int
 )
@@ -24,6 +24,6 @@ data class Main(
 data class Wind(var speed: Double)
 
 data class Sys(
-    var sunrise: Long,
-    var sunset: Long
+    var sunrise: String,
+    var sunset: String
 )

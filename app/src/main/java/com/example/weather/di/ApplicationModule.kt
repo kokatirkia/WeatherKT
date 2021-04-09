@@ -3,10 +3,10 @@ package com.example.weather.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.example.weather.localdatabase.WeatherDb
-import com.example.weather.networking.WeatherApi
-import com.example.weather.repository.Repository
-import com.example.weather.repository.WeatherRepository
+import com.example.weather.data.localdatabase.WeatherDb
+import com.example.weather.data.networking.WeatherApi
+import com.example.weather.domain.repository.Repository
+import com.example.weather.data.repository.WeatherRepository
 import com.example.weather.utils.Constants
 import dagger.Module
 import dagger.Provides

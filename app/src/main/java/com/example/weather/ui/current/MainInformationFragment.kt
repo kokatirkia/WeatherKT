@@ -10,8 +10,8 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.weather.R
 import com.example.weather.databinding.MainInformationBinding
-import com.example.weather.networking.model.CurrentWeatherData
 import com.example.weather.ui.WeatherViewModel
+import com.example.weather.ui.model.CurrentWeatherUi
 import com.example.weather.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -38,34 +38,34 @@ class MainInformationFragment : Fragment() {
     }
 
     private fun setUpObserver() {
-        weatherViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
-            it?.let { showData(it.currentWeatherData) }
+        weatherViewModel.weather.observe(viewLifecycleOwner, Observer {
+            it?.let { showData(it.currentWeatherUi) }
         })
     }
 
-    private fun showData(currentWeatherData: CurrentWeatherData) {
-        binding.temp.text = getString(R.string.celsius_with_args, currentWeatherData.main.temp)
+    private fun showData(currentWeatherUi: CurrentWeatherUi) {
+        binding.temp.text = getString(R.string.celsius_with_args, currentWeatherUi.main.temp)
         binding.description.text =
-            currentWeatherData.weather[0].description.capitalize()
+            currentWeatherUi.weather[0].description.capitalize()
         binding.sunset.text = SimpleDateFormat1(
             "hh:mm a",
             Locale.ENGLISH
-        ).format(Date(currentWeatherData.sys.sunset * 1000))
+        ).format(Date(currentWeatherUi.sys.sunset * 1000))
         binding.sunrise.text = SimpleDateFormat1(
             "hh:mm a",
             Locale.ENGLISH
-        ).format(Date(currentWeatherData.sys.sunrise * 1000))
+        ).format(Date(currentWeatherUi.sys.sunrise * 1000))
         binding.feelsLike.text =
-            getString(R.string.feelsLike_celsius, currentWeatherData.main.feels_like)
-        binding.city.text = currentWeatherData.name
+            getString(R.string.feelsLike_celsius, currentWeatherUi.main.feels_like)
+        binding.city.text = currentWeatherUi.name
         binding.pressure.text =
-            getString(R.string.pressure_with_args, currentWeatherData.main.pressure)
+            getString(R.string.pressure_with_args, currentWeatherUi.main.pressure)
         binding.humidity.text =
-            getString(R.string.humidity_with_args, currentWeatherData.main.humidity, "%")
+            getString(R.string.humidity_with_args, currentWeatherUi.main.humidity, "%")
         binding.wind.text =
-            getString(R.string.speed_with_args, currentWeatherData.wind.speed.toString())
+            getString(R.string.speed_with_args, currentWeatherUi.wind.speed.toString())
         Glide.with(binding.rootLayout)
-            .load(Constants.iconUrl + currentWeatherData.weather[0].icon + ".png")
+            .load(Constants.iconUrl + currentWeatherUi.weather[0].icon + ".png")
             .into(binding.iconid)
 
         hideProgressbar()

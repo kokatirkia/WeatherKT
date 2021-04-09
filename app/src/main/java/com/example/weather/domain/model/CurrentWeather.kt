@@ -1,11 +1,17 @@
-package com.example.weather.networking.model
+package com.example.weather.domain.model
 
-data class CurrentWeatherData(
-    val weather: List<Weather>,
+data class CurrentWeather   (
+    val weatherDescription: List<WeatherDescription>,
     val main: Main,
     val wind: Wind,
     val sys: Sys,
     var name: String
+)
+
+data class WeatherDescription(
+    val main: String,
+    var description: String,
+    val icon: String
 )
 
 data class Main(
@@ -21,11 +27,3 @@ data class Sys(
     var sunrise: Long,
     var sunset: Long
 )
-
-data class Weather(
-    val main: String,
-    var description: String,
-    val icon: String
-)
-
-

@@ -1,0 +1,19 @@
+package com.example.weather.data.localdatabase
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.example.weather.data.localdatabase.model.WeatherEntity
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface WeatherDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertWeather(weatherEntity: WeatherEntity)
+
+    @Query(value = "Select * from weather")
+    fun getWeather(): Flow<WeatherEntity>
+
+}

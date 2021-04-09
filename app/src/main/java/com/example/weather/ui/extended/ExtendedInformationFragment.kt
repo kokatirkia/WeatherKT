@@ -41,9 +41,9 @@ class ExtendedInformationFragment : Fragment() {
     }
 
     private fun subscribeObserver() {
-        weatherViewModel.extendedWeather.observe(viewLifecycleOwner, Observer {
+        weatherViewModel.weather.observe(viewLifecycleOwner, Observer {
             it?.let {
-                recAdapter.submitList(it.extendedWeatherData.list)
+                recAdapter.submitList(it.extendedWeather.list)
                 hideProgressBar()
             }
         })

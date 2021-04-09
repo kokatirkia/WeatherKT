@@ -8,23 +8,26 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weather.databinding.RowLayoutBinding
-import com.example.weather.networking.model.ExtendedWeather
+import com.example.weather.ui.model.WeatherExtendedDataUi
 import com.example.weather.utils.Constants
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RecAdapter : ListAdapter<ExtendedWeather, RecAdapter.CustomViewHolder>(
+class RecAdapter : ListAdapter<WeatherExtendedDataUi, RecAdapter.CustomViewHolder>(
     DiffCallback()
 ) {
 
-    private class DiffCallback : DiffUtil.ItemCallback<ExtendedWeather>() {
-        override fun areItemsTheSame(oldItem: ExtendedWeather, newItem: ExtendedWeather): Boolean {
+    private class DiffCallback : DiffUtil.ItemCallback<WeatherExtendedDataUi>() {
+        override fun areItemsTheSame(
+            oldItem: WeatherExtendedDataUi,
+            newItem: WeatherExtendedDataUi
+        ): Boolean {
             return oldItem.dt_txt == newItem.dt_txt
         }
 
         override fun areContentsTheSame(
-            oldItem: ExtendedWeather,
-            newItem: ExtendedWeather
+            oldItem: WeatherExtendedDataUi,
+            newItem: WeatherExtendedDataUi
         ): Boolean {
             return oldItem.main.temp == newItem.main.temp &&
                     oldItem.main.humidity == newItem.main.humidity &&
@@ -59,7 +62,7 @@ class RecAdapter : ListAdapter<ExtendedWeather, RecAdapter.CustomViewHolder>(
             .load(Constants.iconUrl + extendedWeather.weather[0].icon + ".png")
             .into(holder.binding.icon)
 
-        val isExpandable: Boolean = getItem(position).expandable
+        val isExpandable: Boolean = getItem(position).expanded
         holder.binding.rowViewGroup.visibility = if (isExpandable) View.VISIBLE else View.GONE
 
     }
@@ -69,7 +72,7 @@ class RecAdapter : ListAdapter<ExtendedWeather, RecAdapter.CustomViewHolder>(
         init {
             binding.container.setOnClickListener {
                 val extendedW = getItem(adapterPosition)
-                extendedW.expandable = !extendedW.expandable
+                extendedW.expanded = !extendedW.expanded
                 notifyItemChanged(adapterPosition)
             }
         }

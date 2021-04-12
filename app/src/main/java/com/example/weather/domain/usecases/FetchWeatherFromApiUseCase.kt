@@ -8,7 +8,7 @@ import javax.inject.Inject
 class FetchWeatherFromApiUseCase @Inject constructor(
     private val repository: Repository
 ) {
-    suspend fun fetchWeather(city: String?): String {
+    suspend operator fun invoke(city: String?): String {
         return try {
             repository.fetchWeatherData(city)
             "Data updated"

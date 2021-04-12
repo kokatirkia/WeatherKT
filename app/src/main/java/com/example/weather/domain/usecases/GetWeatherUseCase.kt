@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetWeatherUseCase @Inject constructor(
     private val repository: Repository
 ) {
-    fun getWeather(): Flow<Weather> {
+    operator fun invoke(): Flow<Weather> {
         return repository.getWeather().filterNotNull()
     }
 }

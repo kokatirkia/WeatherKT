@@ -15,7 +15,7 @@ class WeatherViewModel @ViewModelInject constructor(
     private val uiWeatherMapper: UiWeatherMapper
 ) : ViewModel() {
 
-    val weather: LiveData<WeatherUi> = getWeatherUseCase.getWeather().map {
+    val weather: LiveData<WeatherUi> = getWeatherUseCase.invoke().map {
         uiWeatherMapper.weatherDomainToWeatherUi(it)
     }.asLiveData()
 
@@ -27,6 +27,6 @@ class WeatherViewModel @ViewModelInject constructor(
     }
 
     fun fetchWeatherData(city: String? = null) = viewModelScope.launch {
-        _responseMessage.value = fetchWeatherFromApiUseCase.fetchWeather(city)
+        _responseMessage.value = fetchWeatherFromApiUseCase.invoke(city)
     }
 }

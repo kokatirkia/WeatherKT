@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Konstantine.tirkia/AndroidStudioProjects/WeatherKT/app/src/main/res/drawable/shape.xml" value="0.25" />
+        <entry key="..\:/Users/Konstantine.tirkia/AndroidStudioProjects/WeatherKT/app/src/main/res/layout/main_information.xml" value="0.782312925170068" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

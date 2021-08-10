@@ -9,32 +9,44 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weather.ui.WeatherViewModel
 
 @Composable
-fun SearchBox(weatherViewModel: WeatherViewModel) {
-    val textFieldValue = remember { mutableStateOf("") }
+fun SearchBox(weatherViewModel: WeatherViewModel = viewModel()) {
+    val cityName: String by weatherViewModel.cityNameTextFieldValue.observeAsState("")
+    SearchBoxComponent(
+        cityName = cityName,
+        onCityNameChange = { weatherViewModel.onTextFieldValueChanged(it) },
+        fetchWeatherData = { weatherViewModel.fetchWeatherData() }
+    )
+}
+
+@Composable
+fun SearchBoxComponent(
+    cityName: String,
+    onCityNameChange: (String) -> Unit,
+    fetchWeatherData: () -> Unit
+) {
     val focusManager = LocalFocusManager.current
 
     TextField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
-        value = textFieldValue.value,
-        onValueChange = {
-            textFieldValue.value = it
-        },
+        value = cityName,
+        onValueChange = onCityNameChange,
         trailingIcon = {
             IconButton(onClick = {
-                weatherViewModel.fetchWeatherData(textFieldValue.value)
+                fetchWeatherData()
                 focusManager.clearFocus()
             }) {
                 Icon(Icons.Rounded.Search, "search", tint = Color.White)
@@ -52,7 +64,7 @@ fun SearchBox(weatherViewModel: WeatherViewModel) {
             unfocusedIndicatorColor = Color.Transparent
         ),
         keyboardActions = KeyboardActions(onDone = {
-            weatherViewModel.fetchWeatherData(textFieldValue.value)
+            fetchWeatherData()
             focusManager.clearFocus()
         }),
         keyboardOptions = KeyboardOptions.Default.copy(

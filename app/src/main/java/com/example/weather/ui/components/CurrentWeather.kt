@@ -112,7 +112,7 @@ fun DetailBox(currentWeatherState: CurrentWeatherUi) {
                         contentDescription = null,
                         modifier = Modifier.size(25.dp)
                     )
-                    Text(text = "pressure", color = Color.White)
+                    Text(text = "Pressure", color = Color.White)
                     Text(
                         text = currentWeatherState.main.pressure,
                         color = Color.White

@@ -14,10 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.weather.ui.WeatherViewModel
 
 @Composable
-fun ErrorFetchingWeather(message: String?, weatherViewModel: WeatherViewModel) {
+fun ErrorFetchingWeather(message: String?, fetchWeatherData: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -29,9 +28,7 @@ fun ErrorFetchingWeather(message: String?, weatherViewModel: WeatherViewModel) {
             text = message ?: "",
             color = Color.White,
         )
-        IconButton(onClick = {
-            weatherViewModel.fetchWeatherData()
-        }) {
+        IconButton(onClick = fetchWeatherData) {
             Icon(
                 Icons.Rounded.Refresh,
                 contentDescription = null,

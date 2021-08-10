@@ -6,21 +6,34 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weather.ui.WeatherViewModel
 import com.example.weather.ui.components.*
 import com.example.weather.ui.model.WeatherState
 
 @Composable
-fun WeatherScreen(weatherViewModel: WeatherViewModel) {
-
+fun WeatherScreen(weatherViewModel: WeatherViewModel = viewModel()) {
     val weatherState: WeatherState? by weatherViewModel.weatherState.observeAsState()
+    val selectedTabIndex by weatherViewModel.selectedTabIndex.observeAsState(0)
 
-    val selectedIndex = remember { mutableStateOf(0) }
+    WeatherScreenComponent(
+        weatherState = weatherState,
+        selectedTabIndex = selectedTabIndex,
+        onSelectedIndexChanged = { weatherViewModel.onSelectedIndexChanged(it) },
+        fetchWeatherData = { weatherViewModel.fetchWeatherData() }
+    )
+}
+
+@Composable
+fun WeatherScreenComponent(
+    weatherState: WeatherState?,
+    selectedTabIndex: Int,
+    onSelectedIndexChanged: (Int) -> Unit,
+    fetchWeatherData: () -> Unit
+) {
 
     Column(
         modifier = Modifier
@@ -28,16 +41,16 @@ fun WeatherScreen(weatherViewModel: WeatherViewModel) {
             .background(color = MaterialTheme.colors.background)
     ) {
 
-        SearchBox(weatherViewModel)
+        SearchBox()
 
         TabRow(
-            selectedTabIndex = selectedIndex.value,
+            selectedTabIndex = selectedTabIndex,
             contentColor = Color.White
         ) {
             for (i in 0..1) {
                 Tab(
-                    selected = selectedIndex.value == i,
-                    onClick = { selectedIndex.value = i },
+                    selected = selectedTabIndex == i,
+                    onClick = { onSelectedIndexChanged(i) },
                     modifier = Modifier
                         .heightIn(min = 48.dp)
                         .padding(horizontal = 16.dp, vertical = 2.dp)
@@ -50,13 +63,16 @@ fun WeatherScreen(weatherViewModel: WeatherViewModel) {
 
         weatherState?.let { weatherState ->
             if (weatherState.noInternetConnection) {
-                NoInternetConnection(weatherViewModel)
+                NoInternetConnection(fetchWeatherData = fetchWeatherData)
             }
             if (weatherState.errorWhileFetching) {
-                ErrorFetchingWeather(weatherState.responseMessage, weatherViewModel)
+                ErrorFetchingWeather(
+                    weatherState.responseMessage,
+                    fetchWeatherData = fetchWeatherData
+                )
                 return@let
             }
-            if (selectedIndex.value == 0) {
+            if (selectedTabIndex == 0) {
                 weatherState.weatherUi?.let { CurrentWeather(it.currentWeatherUi) }
             } else {
                 weatherState.weatherUi?.let { ExtendedWeather(it.extendedWeather) }

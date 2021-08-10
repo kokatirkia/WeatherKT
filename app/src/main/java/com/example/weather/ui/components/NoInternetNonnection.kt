@@ -15,10 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.weather.ui.WeatherViewModel
 
 @Composable
-fun NoInternetConnection(weatherViewModel: WeatherViewModel) {
+fun NoInternetConnection(fetchWeatherData: () -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -31,9 +30,7 @@ fun NoInternetConnection(weatherViewModel: WeatherViewModel) {
             modifier = Modifier.padding(10.dp),
             color = Color.White
         )
-        IconButton(onClick = {
-            weatherViewModel.fetchWeatherData()
-        }) {
+        IconButton(onClick = fetchWeatherData) {
             Icon(
                 Icons.Rounded.Refresh,
                 contentDescription = null,

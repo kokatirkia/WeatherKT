@@ -16,11 +16,29 @@ class WeatherViewModel @ViewModelInject constructor(
     private val _weatherState: MutableLiveData<WeatherState> = MutableLiveData()
     val weatherState: LiveData<WeatherState> = _weatherState
 
+    private val _cityNameTextFieldValue: MutableLiveData<String> = MutableLiveData("")
+    val cityNameTextFieldValue: LiveData<String> = _cityNameTextFieldValue
+
+    private val _selectedTabIndex: MutableLiveData<Int> = MutableLiveData(0)
+    val selectedTabIndex: LiveData<Int> = _selectedTabIndex
+
     init {
         fetchWeatherData()
     }
 
-    fun fetchWeatherData(city: String? = null) = viewModelScope.launch {
-        _weatherState.value = fetchWeatherUseCase.invoke(city)
+    fun onTextFieldValueChanged(newValue: String) {
+        _cityNameTextFieldValue.value = newValue
+    }
+
+    fun onSelectedIndexChanged(newIndex: Int) {
+        _selectedTabIndex.value = newIndex
+    }
+
+    fun fetchWeatherData() = viewModelScope.launch {
+        if (_cityNameTextFieldValue.value.isNullOrEmpty()) {
+            _weatherState.value = fetchWeatherUseCase.invoke()
+        } else {
+            _weatherState.value = fetchWeatherUseCase.invoke(_cityNameTextFieldValue.value)
+        }
     }
 }

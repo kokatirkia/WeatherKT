@@ -14,7 +14,7 @@ class FetchWeatherUseCase @Inject constructor(
     private val repository: Repository,
     private val uiWeatherMapper: UiWeatherMapper
 ) {
-    suspend operator fun invoke(city: String?): WeatherState {
+    suspend operator fun invoke(city: String? = null): WeatherState {
         val weatherState = WeatherState()
         try {
             repository.fetchWeatherData(city)

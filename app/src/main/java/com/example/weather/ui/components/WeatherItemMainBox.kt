@@ -34,7 +34,10 @@ fun WeatherItemMainBox(weatherExtendedDataUi: WeatherExtendedDataUi) {
             modifier = Modifier.align(Alignment.BottomStart)
         )
         Image(
-            painter = rememberImagePainter(Constants.iconUrl + weatherExtendedDataUi.weather[0].icon),
+            painter = rememberImagePainter(
+                data = Constants.iconUrl + weatherExtendedDataUi.weather[0].icon,
+                builder = { crossfade(true) }
+            ),
             contentDescription = null,
             modifier = Modifier
                 .padding(horizontal = 10.dp)

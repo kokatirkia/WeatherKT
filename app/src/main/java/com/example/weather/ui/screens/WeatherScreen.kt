@@ -1,5 +1,7 @@
 package com.example.weather.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -14,6 +16,7 @@ import com.example.weather.ui.WeatherViewModel
 import com.example.weather.ui.components.*
 import com.example.weather.ui.model.WeatherState
 
+@ExperimentalAnimationApi
 @Composable
 fun WeatherScreen(weatherViewModel: WeatherViewModel = viewModel()) {
     val weatherState: WeatherState? by weatherViewModel.weatherState.observeAsState()
@@ -27,6 +30,7 @@ fun WeatherScreen(weatherViewModel: WeatherViewModel = viewModel()) {
     )
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun WeatherScreenComponent(
     weatherState: WeatherState?,
@@ -62,7 +66,7 @@ fun WeatherScreenComponent(
         }
 
         weatherState?.let { weatherState ->
-            if (weatherState.noInternetConnection) {
+            AnimatedVisibility(weatherState.noInternetConnection) {
                 NoInternetConnection(fetchWeatherData = fetchWeatherData)
             }
             if (weatherState.errorWhileFetching) {

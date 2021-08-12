@@ -9,8 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weather.ui.WeatherViewModel
 import com.example.weather.ui.components.*
@@ -47,23 +45,7 @@ fun WeatherScreenComponent(
 
         SearchBox()
 
-        TabRow(
-            selectedTabIndex = selectedTabIndex,
-            contentColor = Color.White
-        ) {
-            for (i in 0..1) {
-                Tab(
-                    selected = selectedTabIndex == i,
-                    onClick = { onSelectedIndexChanged(i) },
-                    modifier = Modifier
-                        .heightIn(min = 48.dp)
-                        .padding(horizontal = 16.dp, vertical = 2.dp)
-                ) {
-                    if (i == 0) Text(text = "Current")
-                    else Text(text = "5 days")
-                }
-            }
-        }
+        Tabs(selectedTabIndex, onSelectedIndexChanged)
 
         weatherState?.let { weatherState ->
             AnimatedVisibility(weatherState.noInternetConnection) {

@@ -1,10 +1,10 @@
 package com.example.weather.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -52,17 +52,34 @@ fun WeatherScreenComponent(
                 NoInternetConnection(fetchWeatherData = fetchWeatherData)
             }
             if (weatherState.errorWhileFetching) {
-                ErrorFetchingWeather(
-                    weatherState.responseMessage,
-                    fetchWeatherData = fetchWeatherData
-                )
-                return@let
-            }
-            if (selectedTabIndex == 0) {
-                weatherState.weatherUi?.let { CurrentWeather(it.currentWeatherUi) }
+                ErrorFetchingWeather(weatherState.responseMessage, fetchWeatherData)
             } else {
-                weatherState.weatherUi?.let { ExtendedWeather(it.extendedWeather) }
+                WeatherData(weatherState, selectedTabIndex)
             }
         } ?: CircularProgressBar()
+    }
+}
+
+@ExperimentalAnimationApi
+@Composable
+fun WeatherData(weatherState: WeatherState, selectedTabIndex: Int) {
+    AnimatedContent(
+        targetState = selectedTabIndex,
+        transitionSpec = {
+            if (targetState > initialState) {
+                slideInHorizontally({ width -> width }) + fadeIn() with
+                        slideOutHorizontally({ width -> -width }) + fadeOut()
+            } else {
+                slideInHorizontally({ width -> -width }) + fadeIn() with
+                        slideOutHorizontally({ width -> width }) + fadeOut()
+            }.using(
+                SizeTransform(clip = false)
+            )
+        }
+    ) { tabIndex ->
+        when (tabIndex) {
+            0 -> weatherState.weatherUi?.let { CurrentWeather(it.currentWeatherUi) }
+            1 -> weatherState.weatherUi?.let { ExtendedWeather(it.extendedWeather) }
+        }
     }
 }

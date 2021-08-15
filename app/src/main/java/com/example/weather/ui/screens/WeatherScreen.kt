@@ -79,7 +79,7 @@ fun WeatherData(weatherState: WeatherState, selectedTabIndex: Int) {
     ) { tabIndex ->
         when (tabIndex) {
             0 -> weatherState.weatherUi?.let { CurrentWeather(it.currentWeatherUi) }
-            1 -> weatherState.weatherUi?.let { ExtendedWeather(it.extendedWeather) }
+            1 -> weatherState.weatherUi?.let { ExtendedWeather(it.extendedWeatherUi) }
         }
     }
 }

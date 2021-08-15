@@ -4,25 +4,64 @@ import com.example.weather.data.localdatabase.model.*
 import com.example.weather.data.networking.model.CurrentWeatherApi
 import com.example.weather.data.networking.model.ExtendedWeatherApi
 import com.example.weather.domain.model.*
-import com.example.weather.utils.DateUtil
 import javax.inject.Inject
 
-class WeatherMapper @Inject constructor(private val dateUtil: DateUtil) {
+class WeatherMapper @Inject constructor() {
 
-    fun weatherApiToWeatherEntity(
+    fun weatherApiToWeatherDomain(
         currentWeatherApi: CurrentWeatherApi,
         extendedWeatherApi: ExtendedWeatherApi
-    ): WeatherEntity {
-        return WeatherEntity(
-            currentWeather = currentWeatherApiToCurrentWeatherEntity(currentWeatherApi),
-            extendedWeather = extendedWeatherApiToExtendedWeatherEntity(extendedWeatherApi)
+    ): Weather {
+        return Weather(
+            currentWeather = currentWeatherApiToCurrentWeatherDomain(currentWeatherApi),
+            extendedWeather = extendedWeatherApiToExtendedWeatherDomain(extendedWeatherApi)
+        )
+    }
+
+    private fun currentWeatherApiToCurrentWeatherDomain(currentWeatherApi: CurrentWeatherApi): CurrentWeather {
+        return CurrentWeather(
+            currentWeatherApi.weather.map {
+                WeatherDescription(it.main, it.description, it.icon)
+            },
+            Main(
+                currentWeatherApi.main.temp,
+                currentWeatherApi.main.feelsLike,
+                currentWeatherApi.main.pressure,
+                currentWeatherApi.main.humidity
+            ),
+            Wind(currentWeatherApi.wind.speed),
+            Sys(
+                currentWeatherApi.sys.sunrise,
+                currentWeatherApi.sys.sunset
+            ),
+            currentWeatherApi.dt,
+            currentWeatherApi.name
+        )
+    }
+
+    private fun extendedWeatherApiToExtendedWeatherDomain(extendedWeatherApi: ExtendedWeatherApi): ExtendedWeather {
+        return ExtendedWeather(
+            extendedWeatherApi.list.map {
+                WeatherExtendedData(
+                    it.dt,
+                    MainExtended(it.main.temp, it.main.pressure, it.main.humidity),
+                    it.dtTxt,
+                    it.weather.map { description ->
+                        DescriptionExtended(
+                            description.description,
+                            description.icon
+                        )
+                    },
+                    WindExtended(it.wind.speed)
+                )
+            }
         )
     }
 
     fun weatherEntityToWeatherDomain(weatherEntity: WeatherEntity): Weather {
         return Weather(
-            currentWeatherEntityToCurrentWeatherDomain(weatherEntity.currentWeather),
-            extendedWeatherEntityToExtendedWeatherDomain(weatherEntity.extendedWeather)
+            currentWeather = currentWeatherEntityToCurrentWeatherDomain(weatherEntity.currentWeather),
+            extendedWeather = extendedWeatherEntityToExtendedWeatherDomain(weatherEntity.extendedWeather)
         )
     }
 
@@ -43,11 +82,10 @@ class WeatherMapper @Inject constructor(private val dateUtil: DateUtil) {
             ),
             Wind(currentWeatherEntity.windEntity.speed),
             Sys(
-                dateUtil.longToString(currentWeatherEntity.sysEntity.sunrise, "hh:mm a"),
-                dateUtil.longToString(currentWeatherEntity.sysEntity.sunset, "hh:mm a")
+                currentWeatherEntity.sysEntity.sunrise,
+                currentWeatherEntity.sysEntity.sunset
             ),
-            dateUtil.longToString(currentWeatherEntity.dt, "EEEE"),
-            dateUtil.longToString(currentWeatherEntity.dt, "hh:mm a"),
+            currentWeatherEntity.dt,
             currentWeatherEntity.name
         )
     }
@@ -56,7 +94,7 @@ class WeatherMapper @Inject constructor(private val dateUtil: DateUtil) {
         return ExtendedWeather(
             extendedWeatherEntity.list.map {
                 WeatherExtendedData(
-                    dateUtil.longToString(it.dt, "EEE, d MMM HH:mm a"),
+                    it.dt,
                     MainExtended(
                         it.mainEntity.temp,
                         it.mainEntity.pressure,
@@ -75,31 +113,37 @@ class WeatherMapper @Inject constructor(private val dateUtil: DateUtil) {
         )
     }
 
-    private fun currentWeatherApiToCurrentWeatherEntity(currentWeatherApi: CurrentWeatherApi): CurrentWeatherEntity {
-        return CurrentWeatherEntity(
-            currentWeatherApi.weather.map {
-                WeatherDescriptionEntity(it.main, it.description, it.icon)
-            },
-            MainEntity(
-                currentWeatherApi.main.temp,
-                currentWeatherApi.main.feelsLike,
-                currentWeatherApi.main.pressure,
-                currentWeatherApi.main.humidity
-            ),
-            WindEntity(currentWeatherApi.wind.speed),
-            SysEntity(
-                currentWeatherApi.sys.sunrise,
-                currentWeatherApi.sys.sunset
-            ),
-            currentWeatherApi.dt,
-            currentWeatherApi.name
+    fun weatherDomainToWeatherEntity(weather: Weather): WeatherEntity {
+        return WeatherEntity(
+            currentWeather = currentWeatherDomainToCurrentWeatherEntity(weather.currentWeather),
+            extendedWeather = extendedWeatherDomainToExtendedWeatherEntity(weather.extendedWeather)
         )
     }
 
-    private fun extendedWeatherApiToExtendedWeatherEntity(extendedWeatherApi: ExtendedWeatherApi): ExtendedWeatherEntity {
+    private fun currentWeatherDomainToCurrentWeatherEntity(currentWeather: CurrentWeather): CurrentWeatherEntity {
+        return CurrentWeatherEntity(
+            currentWeather.weatherDescription.map {
+                WeatherDescriptionEntity(it.main, it.description, it.icon)
+            },
+            MainEntity(
+                currentWeather.main.temp,
+                currentWeather.main.feelsLike,
+                currentWeather.main.pressure,
+                currentWeather.main.humidity
+            ),
+            WindEntity(currentWeather.wind.speed),
+            SysEntity(
+                currentWeather.sys.sunrise,
+                currentWeather.sys.sunset
+            ),
+            currentWeather.dt,
+            currentWeather.name
+        )
+    }
+
+    private fun extendedWeatherDomainToExtendedWeatherEntity(extendedWeather: ExtendedWeather): ExtendedWeatherEntity {
         return ExtendedWeatherEntity(
-            extendedWeatherApi.message,
-            extendedWeatherApi.list.map {
+            extendedWeather.list.map {
                 WeatherExtendedDataEntity(
                     it.dt,
                     MainExtendedEntity(it.main.temp, it.main.pressure, it.main.humidity),

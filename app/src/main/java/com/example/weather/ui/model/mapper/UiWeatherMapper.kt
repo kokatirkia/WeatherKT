@@ -4,15 +4,18 @@ import com.example.weather.domain.model.CurrentWeather
 import com.example.weather.domain.model.ExtendedWeather
 import com.example.weather.domain.model.Weather
 import com.example.weather.ui.model.*
+import com.example.weather.utils.DateUtil
 import javax.inject.Inject
 
-class UiWeatherMapper @Inject constructor() {
+class UiWeatherMapper @Inject constructor(private val dateUtil: DateUtil) {
 
-    fun weatherDomainToWeatherUi(weather: Weather): WeatherUi {
-        return WeatherUi(
-            currentWeatherDomainToCurrentWeatherUi(weather.currentWeather),
-            extendedWeatherDomainToExtendedWeatherUi(weather.extendedWeather)
-        )
+    fun weatherDomainToWeatherUi(weather: Weather?): WeatherUi? {
+        return weather?.let {
+            return WeatherUi(
+                currentWeatherUi = currentWeatherDomainToCurrentWeatherUi(it.currentWeather),
+                extendedWeatherUi = extendedWeatherDomainToExtendedWeatherUi(it.extendedWeather)
+            )
+        }
     }
 
     private fun currentWeatherDomainToCurrentWeatherUi(currentWeather: CurrentWeather): CurrentWeatherUi {
@@ -32,11 +35,11 @@ class UiWeatherMapper @Inject constructor() {
             ),
             WindUi("${currentWeather.wind.speed} km/h"),
             SysUi(
-                currentWeather.sys.sunrise,
-                currentWeather.sys.sunset
+                dateUtil.longToString(currentWeather.sys.sunrise, "hh:mm a"),
+                dateUtil.longToString(currentWeather.sys.sunset, "hh:mm a")
             ),
-            currentWeather.day,
-            currentWeather.time,
+            dateUtil.longToString(currentWeather.dt, "EEEE"),
+            dateUtil.longToString(currentWeather.dt, "hh:mm a"),
             currentWeather.name
         )
     }
@@ -45,7 +48,7 @@ class UiWeatherMapper @Inject constructor() {
         return ExtendedWeatherUi(
             extendedWeather.list.map {
                 WeatherExtendedDataUi(
-                    it.dt,
+                    dateUtil.longToString(it.dt, "EEE, d MMM HH:mm a"),
                     MainExtendedUi(
                         "${it.main.temp} °C",
                         "${it.main.pressure} mBar",

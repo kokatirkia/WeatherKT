@@ -2,6 +2,7 @@ package com.example.weather.domain.usecases
 
 import com.example.weather.domain.model.FetchWeatherResponse
 import com.example.weather.domain.repository.Repository
+import com.example.weather.utils.ResponseMessageEnum
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import retrofit2.HttpException
@@ -18,14 +19,14 @@ class FetchWeatherUseCase @Inject constructor(
             repository.saveWeatherInLocalDatabase(weather)
         } catch (throwable: Throwable) {
             when (throwable) {
-                is IOException -> fetchWeatherResponse.noInternetConnection = true
+                is IOException -> {
+                    fetchWeatherResponse.responseMessage = ResponseMessageEnum.NoInternetConnection
+                }
                 is HttpException -> {
-                    fetchWeatherResponse.errorWhileFetching = true
-                    fetchWeatherResponse.responseMessage = "City not found!"
+                    fetchWeatherResponse.responseMessage = ResponseMessageEnum.CityNotFound
                 }
                 else -> {
-                    fetchWeatherResponse.errorWhileFetching = true
-                    fetchWeatherResponse.responseMessage = "Error fetching data"
+                    fetchWeatherResponse.responseMessage = ResponseMessageEnum.ErrorWhileFetching
                 }
             }
         }

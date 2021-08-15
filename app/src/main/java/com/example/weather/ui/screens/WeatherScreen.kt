@@ -13,11 +13,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weather.ui.WeatherViewModel
 import com.example.weather.ui.components.*
 import com.example.weather.ui.model.WeatherState
+import com.example.weather.utils.ResponseMessageEnum
 
 @ExperimentalAnimationApi
 @Composable
 fun WeatherScreen(weatherViewModel: WeatherViewModel = viewModel()) {
-    val weatherState: WeatherState? by weatherViewModel.weatherState.observeAsState()
+    val weatherState: WeatherState by weatherViewModel.weatherState.observeAsState(WeatherState())
     val selectedTabIndex by weatherViewModel.selectedTabIndex.observeAsState(0)
 
     WeatherScreenComponent(
@@ -31,7 +32,7 @@ fun WeatherScreen(weatherViewModel: WeatherViewModel = viewModel()) {
 @ExperimentalAnimationApi
 @Composable
 fun WeatherScreenComponent(
-    weatherState: WeatherState?,
+    weatherState: WeatherState,
     selectedTabIndex: Int,
     onSelectedIndexChanged: (Int) -> Unit,
     fetchWeatherData: () -> Unit
@@ -47,16 +48,22 @@ fun WeatherScreenComponent(
 
         Tabs(selectedTabIndex, onSelectedIndexChanged)
 
-        weatherState?.let { weatherState ->
-            AnimatedVisibility(weatherState.noInternetConnection) {
+        if (weatherState.loading) {
+            CircularProgressBar()
+        } else {
+            if (weatherState.responseMessage == ResponseMessageEnum.NoInternetConnection) {
                 NoInternetConnection(fetchWeatherData = fetchWeatherData)
             }
-            if (weatherState.errorWhileFetching) {
-                ErrorFetchingWeather(weatherState.responseMessage, fetchWeatherData)
-            } else {
-                WeatherData(weatherState, selectedTabIndex)
+            when (weatherState.responseMessage) {
+                ResponseMessageEnum.ErrorWhileFetching -> {
+                    ErrorFetchingWeather(weatherState.responseMessage!!.value, fetchWeatherData)
+                }
+                ResponseMessageEnum.CityNotFound -> {
+                    ErrorFetchingWeather(weatherState.responseMessage!!.value, fetchWeatherData)
+                }
+                else -> WeatherData(weatherState, selectedTabIndex)
             }
-        } ?: CircularProgressBar()
+        }
     }
 }
 

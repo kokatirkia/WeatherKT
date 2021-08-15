@@ -15,7 +15,7 @@ class WeatherViewModel @ViewModelInject constructor(
     private val uiWeatherMapper: UiWeatherMapper
 ) : ViewModel() {
 
-    private val _weatherState: MutableLiveData<WeatherState> = MutableLiveData()
+    private val _weatherState: MutableLiveData<WeatherState> = MutableLiveData(WeatherState())
     val weatherState: LiveData<WeatherState> = _weatherState
 
     private val _cityNameTextFieldValue: MutableLiveData<String> = MutableLiveData("")
@@ -37,18 +37,17 @@ class WeatherViewModel @ViewModelInject constructor(
     }
 
     fun fetchWeatherData() = viewModelScope.launch {
+        _weatherState.value = _weatherState.value!!.copy(loading = true)
+
         val (
             weather,
             responseMessage,
-            errorWhileFetching,
-            noInternetConnection,
         ) = fetchWeatherUseCase.invoke(_cityNameTextFieldValue.value)
 
         _weatherState.value = WeatherState(
             weatherUi = uiWeatherMapper.weatherDomainToWeatherUi(weather),
             responseMessage = responseMessage,
-            errorWhileFetching = errorWhileFetching,
-            noInternetConnection = noInternetConnection
+            loading = false,
         )
     }
 }

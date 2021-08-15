@@ -1,8 +1,9 @@
 package com.example.weather.ui.model
 
+import com.example.weather.utils.ResponseMessageEnum
+
 data class WeatherState(
     var weatherUi: WeatherUi? = null,
-    var responseMessage: String? = null,
-    var errorWhileFetching: Boolean = false,
-    var noInternetConnection: Boolean = false,
+    var responseMessage: ResponseMessageEnum? = null,
+    var loading: Boolean = false
 )

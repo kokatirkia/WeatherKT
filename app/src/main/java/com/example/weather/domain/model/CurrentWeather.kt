@@ -5,8 +5,7 @@ data class CurrentWeather(
     val main: Main,
     val wind: Wind,
     val sys: Sys,
-    val day: String,
-    val time: String,
+    val dt: Long,
     var name: String,
 )
 
@@ -26,6 +25,6 @@ data class Main(
 data class Wind(var speed: Double)
 
 data class Sys(
-    var sunrise: String,
-    var sunset: String
+    var sunrise: Long,
+    var sunset: Long
 )

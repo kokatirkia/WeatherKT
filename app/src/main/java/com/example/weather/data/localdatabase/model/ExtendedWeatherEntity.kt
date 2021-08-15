@@ -1,7 +1,6 @@
 package com.example.weather.data.localdatabase.model
 
 data class ExtendedWeatherEntity(
-    val message: Double,
     val list: List<WeatherExtendedDataEntity>
 )
 

@@ -17,12 +17,12 @@ import com.example.weather.ui.model.WeatherExtendedDataUi
 
 @ExperimentalAnimationApi
 @Composable
-fun ExtendedWeather(extendedWeatherState: ExtendedWeatherUi) {
+fun ExtendedWeather(extendedWeatherUI: ExtendedWeatherUi) {
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 5.dp, vertical = 5.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        extendedWeatherState.list.forEach {
+        extendedWeatherUI.list.forEach {
             item { WeatherItem(weatherExtendedDataUi = it) }
         }
     }

@@ -5,7 +5,7 @@ data class ExtendedWeather(
 )
 
 data class WeatherExtendedData(
-    val dt: String,
+    val dt: Long,
     val main: MainExtended,
     val dtTxt: String,
     val weather: List<DescriptionExtended>,

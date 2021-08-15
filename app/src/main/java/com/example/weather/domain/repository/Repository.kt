@@ -4,9 +4,11 @@ import com.example.weather.domain.model.Weather
 import kotlinx.coroutines.flow.Flow
 
 interface Repository {
-    fun getWeather(): Flow<Weather>
+    fun getWeatherFromLocalDatabase(): Flow<Weather>
 
-    suspend fun fetchWeatherData(city: String?)
+    suspend fun saveWeatherInLocalDatabase(weather: Weather)
+
+    suspend fun fetchWeatherFromApi(city: String?): Weather
 
     fun saveCityInPreferences(city: String?)
 }

@@ -7,10 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weather.domain.usecases.FetchWeatherUseCase
 import com.example.weather.ui.model.WeatherState
+import com.example.weather.ui.model.mapper.UiWeatherMapper
 import kotlinx.coroutines.launch
 
 class WeatherViewModel @ViewModelInject constructor(
     private val fetchWeatherUseCase: FetchWeatherUseCase,
+    private val uiWeatherMapper: UiWeatherMapper
 ) : ViewModel() {
 
     private val _weatherState: MutableLiveData<WeatherState> = MutableLiveData()
@@ -35,10 +37,18 @@ class WeatherViewModel @ViewModelInject constructor(
     }
 
     fun fetchWeatherData() = viewModelScope.launch {
-        if (_cityNameTextFieldValue.value.isNullOrEmpty()) {
-            _weatherState.value = fetchWeatherUseCase.invoke()
-        } else {
-            _weatherState.value = fetchWeatherUseCase.invoke(_cityNameTextFieldValue.value)
-        }
+        val (
+            weather,
+            responseMessage,
+            errorWhileFetching,
+            noInternetConnection,
+        ) = fetchWeatherUseCase.invoke(_cityNameTextFieldValue.value)
+
+        _weatherState.value = WeatherState(
+            weatherUi = uiWeatherMapper.weatherDomainToWeatherUi(weather),
+            responseMessage = responseMessage,
+            errorWhileFetching = errorWhileFetching,
+            noInternetConnection = noInternetConnection
+        )
     }
 }

@@ -5,6 +5,7 @@ data class CurrentWeatherEntity(
     val mainEntity: MainEntity,
     val windEntity: WindEntity,
     val sysEntity: SysEntity,
+    val dt: Long,
     var name: String
 )
 

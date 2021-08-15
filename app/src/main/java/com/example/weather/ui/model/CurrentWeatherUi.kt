@@ -5,6 +5,8 @@ data class CurrentWeatherUi(
     val main: MainUi,
     val wind: WindUi,
     val sys: SysUi,
+    val day: String,
+    val time: String,
     var name: String
 )
 

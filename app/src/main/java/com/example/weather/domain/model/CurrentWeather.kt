@@ -1,11 +1,13 @@
 package com.example.weather.domain.model
 
-data class CurrentWeather   (
+data class CurrentWeather(
     val weatherDescription: List<WeatherDescription>,
     val main: Main,
     val wind: Wind,
     val sys: Sys,
-    var name: String
+    val day: String,
+    val time: String,
+    var name: String,
 )
 
 data class WeatherDescription(

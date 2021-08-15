@@ -2,10 +2,7 @@ package com.example.weather.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +17,7 @@ import com.example.weather.ui.model.CurrentWeatherUi
 import com.example.weather.utils.Constants
 
 @Composable
-fun CurrentWeather(currentWeatherState: CurrentWeatherUi) {
+fun CurrentWeather(currentWeatherUi: CurrentWeatherUi) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -29,35 +26,46 @@ fun CurrentWeather(currentWeatherState: CurrentWeatherUi) {
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         Text(
-            text = currentWeatherState.name,
+            text = currentWeatherUi.name,
             fontSize = 35.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
+        Row {
+            Image(
+                painter = rememberImagePainter(
+                    data = Constants.iconUrl + currentWeatherUi.weather[0].icon,
+                    builder = { crossfade(true) }
+                ),
+                contentDescription = null,
+                modifier = Modifier.size(50.dp)
+            )
+            Column {
+                Text(
+                    text = currentWeatherUi.day,
+                    color = Color.White
+                )
+                Text(
+                    text = currentWeatherUi.time,
+                    color = Color.White
+                )
+            }
+        }
         Text(
-            text = currentWeatherState.main.temp,
+            text = currentWeatherUi.main.temp,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
         Text(
-            text = currentWeatherState.main.feelsLike,
-            fontSize = 20.sp,
+            text = currentWeatherUi.weather[0].description,
+            fontSize = 18.sp,
             color = Color.White
         )
         Text(
-            text = currentWeatherState.weather[0].description,
-            fontSize = 20.sp,
+            text = currentWeatherUi.main.feelsLike,
             color = Color.White
         )
-        Image(
-            painter = rememberImagePainter(
-                data = Constants.iconUrl + currentWeatherState.weather[0].icon,
-                builder = { crossfade(true) }
-            ),
-            contentDescription = null,
-            modifier = Modifier.size(50.dp)
-        )
-        DetailBox(currentWeatherState)
+        DetailBox(currentWeatherUi)
     }
 }

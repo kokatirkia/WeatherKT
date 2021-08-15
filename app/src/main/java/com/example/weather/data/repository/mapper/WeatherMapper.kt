@@ -4,11 +4,10 @@ import com.example.weather.data.localdatabase.model.*
 import com.example.weather.data.networking.model.CurrentWeatherApi
 import com.example.weather.data.networking.model.ExtendedWeatherApi
 import com.example.weather.domain.model.*
-import java.text.SimpleDateFormat
-import java.util.*
+import com.example.weather.utils.DateUtil
 import javax.inject.Inject
 
-class WeatherMapper @Inject constructor() {
+class WeatherMapper @Inject constructor(private val dateUtil: DateUtil) {
 
     fun weatherApiToWeatherEntity(
         currentWeatherApi: CurrentWeatherApi,
@@ -44,15 +43,11 @@ class WeatherMapper @Inject constructor() {
             ),
             Wind(currentWeatherEntity.windEntity.speed),
             Sys(
-                SimpleDateFormat(
-                    "hh:mm a",
-                    Locale.ENGLISH
-                ).format(Date(currentWeatherEntity.sysEntity.sunrise * 1000)),
-                SimpleDateFormat(
-                    "hh:mm a",
-                    Locale.ENGLISH
-                ).format(Date(currentWeatherEntity.sysEntity.sunset * 1000))
+                dateUtil.longToString(currentWeatherEntity.sysEntity.sunrise, "hh:mm a"),
+                dateUtil.longToString(currentWeatherEntity.sysEntity.sunset, "hh:mm a")
             ),
+            dateUtil.longToString(currentWeatherEntity.dt, "EEEE"),
+            dateUtil.longToString(currentWeatherEntity.dt, "hh:mm a"),
             currentWeatherEntity.name
         )
     }
@@ -61,10 +56,7 @@ class WeatherMapper @Inject constructor() {
         return ExtendedWeather(
             extendedWeatherEntity.list.map {
                 WeatherExtendedData(
-                    SimpleDateFormat(
-                        "EEE, d MMM HH:mm",
-                        Locale.ENGLISH
-                    ).format(Date(it.dt * 1000)),
+                    dateUtil.longToString(it.dt, "EEE, d MMM HH:mm a"),
                     MainExtended(
                         it.mainEntity.temp,
                         it.mainEntity.pressure,
@@ -99,6 +91,7 @@ class WeatherMapper @Inject constructor() {
                 currentWeatherApi.sys.sunrise,
                 currentWeatherApi.sys.sunset
             ),
+            currentWeatherApi.dt,
             currentWeatherApi.name
         )
     }

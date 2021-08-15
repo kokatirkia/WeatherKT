@@ -11,6 +11,8 @@ data class CurrentWeatherApi(
     val wind: WindApi,
     @SerializedName("sys")
     val sys: SysApi,
+    @SerializedName("dt")
+    val dt:Long,
     @SerializedName("name")
     var name: String
 )

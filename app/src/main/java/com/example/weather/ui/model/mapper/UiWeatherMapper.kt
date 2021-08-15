@@ -26,7 +26,7 @@ class UiWeatherMapper @Inject constructor() {
             },
             MainUi(
                 "${currentWeather.main.temp} °C",
-                "${currentWeather.main.feelsLike} °C",
+                "Feels like ${currentWeather.main.feelsLike} °C",
                 "${currentWeather.main.pressure} mBar",
                 "${currentWeather.main.humidity} %"
             ),
@@ -35,6 +35,8 @@ class UiWeatherMapper @Inject constructor() {
                 currentWeather.sys.sunrise,
                 currentWeather.sys.sunset
             ),
+            currentWeather.day,
+            currentWeather.time,
             currentWeather.name
         )
     }

@@ -4,27 +4,34 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weather.ui.WeatherViewModel
 import com.example.weather.ui.components.*
 import com.example.weather.ui.model.WeatherState
 import com.example.weather.utils.ResponseMessageEnum
 
+enum class WeatherTabScreen {
+    Current, FiveDays
+}
+
 @ExperimentalAnimationApi
 @Composable
 fun WeatherScreen(weatherViewModel: WeatherViewModel = viewModel()) {
     val weatherState: WeatherState by weatherViewModel.weatherState.observeAsState(WeatherState())
-    val selectedTabIndex by weatherViewModel.selectedTabIndex.observeAsState(0)
+    val selectedTabScreen by weatherViewModel.selectedTabScreen.observeAsState(WeatherTabScreen.Current)
 
     WeatherScreenComponent(
         weatherState = weatherState,
-        selectedTabIndex = selectedTabIndex,
-        onSelectedIndexChanged = { weatherViewModel.onSelectedIndexChanged(it) },
+        selectedTabScreen = selectedTabScreen,
+        onSelectedTabScreenChanged = { weatherViewModel.onSelectedTabScreenChanged(it) },
         fetchWeatherData = { weatherViewModel.fetchWeatherData() }
     )
 }
@@ -33,8 +40,8 @@ fun WeatherScreen(weatherViewModel: WeatherViewModel = viewModel()) {
 @Composable
 fun WeatherScreenComponent(
     weatherState: WeatherState,
-    selectedTabIndex: Int,
-    onSelectedIndexChanged: (Int) -> Unit,
+    selectedTabScreen: WeatherTabScreen,
+    onSelectedTabScreenChanged: (WeatherTabScreen) -> Unit,
     fetchWeatherData: () -> Unit
 ) {
 
@@ -46,7 +53,14 @@ fun WeatherScreenComponent(
 
         SearchBox()
 
-        Tabs(selectedTabIndex, onSelectedIndexChanged)
+        Tabs(
+            WeatherTabScreen.values().toList(),
+            selectedTabScreen,
+            onSelectedTabScreenChanged,
+            Modifier
+                .heightIn(min = 48.dp)
+                .padding(horizontal = 16.dp, vertical = 2.dp)
+        )
 
         if (weatherState.loading) {
             CircularProgressBar()
@@ -61,7 +75,7 @@ fun WeatherScreenComponent(
                 ResponseMessageEnum.CityNotFound -> {
                     ErrorFetchingWeather(weatherState.responseMessage!!.value, fetchWeatherData)
                 }
-                else -> WeatherData(weatherState, selectedTabIndex)
+                else -> WeatherData(weatherState, selectedTabScreen)
             }
         }
     }
@@ -69,9 +83,9 @@ fun WeatherScreenComponent(
 
 @ExperimentalAnimationApi
 @Composable
-fun WeatherData(weatherState: WeatherState, selectedTabIndex: Int) {
+fun WeatherData(weatherState: WeatherState, selectedTabScreen: WeatherTabScreen) {
     AnimatedContent(
-        targetState = selectedTabIndex,
+        targetState = selectedTabScreen,
         transitionSpec = {
             if (targetState > initialState) {
                 slideInHorizontally({ width -> width }) + fadeIn() with
@@ -83,10 +97,10 @@ fun WeatherData(weatherState: WeatherState, selectedTabIndex: Int) {
                 SizeTransform(clip = false)
             )
         }
-    ) { tabIndex ->
-        when (tabIndex) {
-            0 -> weatherState.weatherUi?.let { CurrentWeather(it.currentWeatherUi) }
-            1 -> weatherState.weatherUi?.let { ExtendedWeather(it.extendedWeatherUi) }
+    ) { tabScreen ->
+        when (tabScreen) {
+            WeatherTabScreen.Current -> weatherState.weatherUi?.let { CurrentWeather(it.currentWeatherUi) }
+            WeatherTabScreen.FiveDays -> weatherState.weatherUi?.let { ExtendedWeather(it.extendedWeatherUi) }
         }
     }
 }

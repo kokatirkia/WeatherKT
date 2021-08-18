@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.weather.domain.usecases.FetchWeatherUseCase
 import com.example.weather.ui.model.WeatherState
 import com.example.weather.ui.model.mapper.UiWeatherMapper
+import com.example.weather.ui.screens.WeatherTabScreen
 import kotlinx.coroutines.launch
 
 class WeatherViewModel @ViewModelInject constructor(
@@ -21,8 +22,9 @@ class WeatherViewModel @ViewModelInject constructor(
     private val _cityNameTextFieldValue: MutableLiveData<String> = MutableLiveData("")
     val cityNameTextFieldValue: LiveData<String> = _cityNameTextFieldValue
 
-    private val _selectedTabIndex: MutableLiveData<Int> = MutableLiveData(0)
-    val selectedTabIndex: LiveData<Int> = _selectedTabIndex
+    private val _selectedTabScreen: MutableLiveData<WeatherTabScreen> =
+        MutableLiveData(WeatherTabScreen.Current)
+    val selectedTabScreen: LiveData<WeatherTabScreen> = _selectedTabScreen
 
     init {
         fetchWeatherData()
@@ -32,8 +34,8 @@ class WeatherViewModel @ViewModelInject constructor(
         _cityNameTextFieldValue.value = newValue
     }
 
-    fun onSelectedIndexChanged(newIndex: Int) {
-        _selectedTabIndex.value = newIndex
+    fun onSelectedTabScreenChanged(newTabScreen: WeatherTabScreen) {
+        _selectedTabScreen.value = newTabScreen
     }
 
     fun fetchWeatherData() = viewModelScope.launch {

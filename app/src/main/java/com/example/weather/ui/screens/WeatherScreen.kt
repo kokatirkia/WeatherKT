@@ -69,10 +69,7 @@ fun WeatherScreenComponent(
                 NoInternetConnection(fetchWeatherData = fetchWeatherData)
             }
             when (weatherState.responseMessage) {
-                ResponseMessageEnum.ErrorWhileFetching -> {
-                    ErrorFetchingWeather(weatherState.responseMessage!!.value, fetchWeatherData)
-                }
-                ResponseMessageEnum.CityNotFound -> {
+                ResponseMessageEnum.ErrorWhileFetching, ResponseMessageEnum.CityNotFound -> {
                     ErrorFetchingWeather(weatherState.responseMessage!!.value, fetchWeatherData)
                 }
                 else -> WeatherData(weatherState, selectedTabScreen)

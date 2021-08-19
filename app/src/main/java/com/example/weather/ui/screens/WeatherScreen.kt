@@ -16,7 +16,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weather.ui.WeatherViewModel
 import com.example.weather.ui.components.*
 import com.example.weather.ui.model.WeatherState
-import com.example.weather.utils.ResponseMessageEnum
 
 enum class WeatherTabScreen {
     Current, FiveDays
@@ -65,15 +64,8 @@ fun WeatherScreenComponent(
         if (weatherState.loading) {
             CircularProgressBar()
         } else {
-            if (weatherState.responseMessage == ResponseMessageEnum.NoInternetConnection) {
-                NoInternetConnection(fetchWeatherData = fetchWeatherData)
-            }
-            when (weatherState.responseMessage) {
-                ResponseMessageEnum.ErrorWhileFetching, ResponseMessageEnum.CityNotFound -> {
-                    ErrorFetchingWeather(weatherState.responseMessage!!.value, fetchWeatherData)
-                }
-                else -> WeatherData(weatherState, selectedTabScreen)
-            }
+            ErrorMessage(fetchWeatherData, weatherState.errorMessage)
+            WeatherData(weatherState, selectedTabScreen)
         }
     }
 }

@@ -5,14 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weather.domain.usecases.FetchWeatherUseCase
+import com.example.weather.domain.usecases.FetchWeatherFromApiUseCase
+import com.example.weather.domain.usecases.FetchWeatherFromLocalSourceUseCase
 import com.example.weather.ui.model.WeatherState
 import com.example.weather.ui.model.mapper.UiWeatherMapper
 import com.example.weather.ui.screens.WeatherTabScreen
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class WeatherViewModel @ViewModelInject constructor(
-    private val fetchWeatherUseCase: FetchWeatherUseCase,
+    private val fetchWeatherFromApiUseCase: FetchWeatherFromApiUseCase,
+    private val fetchWeatherFromLocalSourceUseCase: FetchWeatherFromLocalSourceUseCase,
     private val uiWeatherMapper: UiWeatherMapper
 ) : ViewModel() {
 
@@ -41,15 +44,16 @@ class WeatherViewModel @ViewModelInject constructor(
     fun fetchWeatherData() = viewModelScope.launch {
         _weatherState.value = _weatherState.value!!.copy(loading = true)
 
-        val (
-            weather,
-            responseMessage,
-        ) = fetchWeatherUseCase.invoke(_cityNameTextFieldValue.value)
+        val errorMessage =
+            fetchWeatherFromApiUseCase.invoke(_cityNameTextFieldValue.value)?.value
+        val weatherUi = uiWeatherMapper.weatherDomainToWeatherUi(
+            fetchWeatherFromLocalSourceUseCase.invoke().first()
+        )
 
-        _weatherState.value = WeatherState(
-            weatherUi = uiWeatherMapper.weatherDomainToWeatherUi(weather),
-            responseMessage = responseMessage,
-            loading = false,
+        _weatherState.value = _weatherState.value!!.copy(
+            errorMessage = errorMessage,
+            weatherUi = weatherUi,
+            loading = false
         )
     }
 }

@@ -17,7 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun NoInternetConnection(fetchWeatherData: () -> Unit) {
+fun ErrorMessage(fetchWeatherData: () -> Unit, errorMessage: String?) {
+    if (errorMessage.isNullOrEmpty()) return
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -26,7 +27,7 @@ fun NoInternetConnection(fetchWeatherData: () -> Unit) {
             .padding(10.dp)
     ) {
         Text(
-            text = "No internet Connection!",
+            text = errorMessage,
             modifier = Modifier.padding(10.dp),
             color = Color.White
         )

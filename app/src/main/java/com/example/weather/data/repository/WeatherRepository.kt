@@ -3,7 +3,9 @@ package com.example.weather.data.repository
 import android.content.SharedPreferences
 import com.example.weather.data.localdatabase.WeatherDao
 import com.example.weather.data.networking.WeatherApi
-import com.example.weather.data.repository.mapper.WeatherMapper
+import com.example.weather.data.networking.model.WeatherModelApi
+import com.example.weather.data.repository.mapper.toWeatherDomain
+import com.example.weather.data.repository.mapper.toWeatherEntity
 import com.example.weather.domain.model.Weather
 import com.example.weather.domain.repository.Repository
 import com.example.weather.utils.Constants
@@ -18,12 +20,10 @@ class WeatherRepository @Inject constructor(
     private val weatherDao: WeatherDao,
     private val weatherApi: WeatherApi,
     private val sharedPreferences: SharedPreferences,
-    private val weatherMapper: WeatherMapper
 ) : Repository {
 
     override fun getWeatherFromLocalDatabase(): Flow<Weather> {
-        return weatherDao.getWeather().filterNotNull()
-            .map { weatherMapper.weatherEntityToWeatherDomain(it) }
+        return weatherDao.getWeather().filterNotNull().map { it.toWeatherDomain() }
     }
 
     override suspend fun fetchWeatherFromApi(city: String?): Weather {
@@ -44,12 +44,11 @@ class WeatherRepository @Inject constructor(
             Constants.ApiKey
         )
 
-        return weatherMapper.weatherApiToWeatherDomain(apiCurrentWeather, apiExtendedWeather)
-
+        return WeatherModelApi(apiCurrentWeather, apiExtendedWeather).toWeatherDomain()
     }
 
     override suspend fun saveWeatherInLocalDatabase(weather: Weather) {
-        weatherDao.insertWeather(weatherMapper.weatherDomainToWeatherEntity(weather))
+        weatherDao.insertWeather(weather.toWeatherEntity())
     }
 
     override fun saveCityInPreferences(city: String?) {

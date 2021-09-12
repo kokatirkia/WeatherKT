@@ -8,7 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.weather.domain.usecases.FetchWeatherFromApiUseCase
 import com.example.weather.domain.usecases.FetchWeatherFromLocalSourceUseCase
 import com.example.weather.ui.model.WeatherState
-import com.example.weather.ui.model.mapper.UiWeatherMapper
+import com.example.weather.ui.model.WeatherUi
+import com.example.weather.ui.model.mapper.toWeatherUi
 import com.example.weather.ui.screens.WeatherTabScreen
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -16,7 +17,6 @@ import kotlinx.coroutines.launch
 class WeatherViewModel @ViewModelInject constructor(
     private val fetchWeatherFromApiUseCase: FetchWeatherFromApiUseCase,
     private val fetchWeatherFromLocalSourceUseCase: FetchWeatherFromLocalSourceUseCase,
-    private val uiWeatherMapper: UiWeatherMapper
 ) : ViewModel() {
 
     private val _weatherState: MutableLiveData<WeatherState> = MutableLiveData(WeatherState())
@@ -46,9 +46,7 @@ class WeatherViewModel @ViewModelInject constructor(
 
         val errorMessage =
             fetchWeatherFromApiUseCase.invoke(_cityNameTextFieldValue.value)?.value
-        val weatherUi = uiWeatherMapper.weatherDomainToWeatherUi(
-            fetchWeatherFromLocalSourceUseCase.invoke().first()
-        )
+        val weatherUi: WeatherUi = fetchWeatherFromLocalSourceUseCase.invoke().first().toWeatherUi()
 
         _weatherState.value = _weatherState.value!!.copy(
             errorMessage = errorMessage,

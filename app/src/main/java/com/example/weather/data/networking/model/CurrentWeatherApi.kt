@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class CurrentWeatherApi(
     @SerializedName("weather")
-    val weather: List<WeatherApi>,
+    val weather: List<CurrentWeatherDataApi>,
     @SerializedName("main")
     val main: MainApi,
     @SerializedName("wind")
@@ -12,12 +12,12 @@ data class CurrentWeatherApi(
     @SerializedName("sys")
     val sys: SysApi,
     @SerializedName("dt")
-    val dt:Long,
+    val dt: Long,
     @SerializedName("name")
     var name: String
 )
 
-data class WeatherApi(
+data class CurrentWeatherDataApi(
     @SerializedName("main")
     val main: String,
     @SerializedName("description")

@@ -1,4 +1,4 @@
-package com.example.weather.ui.components
+package com.example.weather.ui.screens.extendedweathercomponents
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

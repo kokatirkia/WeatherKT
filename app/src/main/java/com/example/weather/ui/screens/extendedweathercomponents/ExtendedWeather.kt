@@ -1,4 +1,4 @@
-package com.example.weather.ui.components
+package com.example.weather.ui.screens.extendedweathercomponents
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -12,6 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.weather.ui.screens.commoncomponents.PHWRow
 import com.example.weather.ui.model.ExtendedWeatherUi
 import com.example.weather.ui.model.WeatherExtendedDataUi
 

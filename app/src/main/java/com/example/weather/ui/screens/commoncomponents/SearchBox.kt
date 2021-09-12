@@ -1,4 +1,4 @@
-package com.example.weather.ui.components
+package com.example.weather.ui.screens.commoncomponents
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,29 +9,15 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.weather.ui.WeatherViewModel
 
 @Composable
-fun SearchBox(weatherViewModel: WeatherViewModel = viewModel()) {
-    val cityName: String by weatherViewModel.cityNameTextFieldValue.observeAsState("")
-    SearchBoxComponent(
-        cityName = cityName,
-        onCityNameChange = { weatherViewModel.onTextFieldValueChanged(it) },
-        fetchWeatherData = { weatherViewModel.fetchWeatherData() }
-    )
-}
-
-@Composable
-fun SearchBoxComponent(
+fun SearchBox(
     cityName: String,
     onCityNameChange: (String) -> Unit,
     fetchWeatherData: () -> Unit
@@ -69,7 +55,7 @@ fun SearchBoxComponent(
         }),
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = ImeAction.Done,
-            keyboardType = KeyboardType.Password
+            keyboardType = KeyboardType.Text
         ),
     )
 }

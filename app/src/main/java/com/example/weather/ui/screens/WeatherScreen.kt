@@ -14,8 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weather.ui.WeatherViewModel
-import com.example.weather.ui.components.*
+import com.example.weather.ui.screens.commoncomponents.CircularProgressBar
+import com.example.weather.ui.screens.commoncomponents.ErrorMessage
+import com.example.weather.ui.screens.commoncomponents.SearchBox
+import com.example.weather.ui.screens.commoncomponents.Tabs
 import com.example.weather.ui.model.WeatherState
+import com.example.weather.ui.screens.currentweathercomponents.CurrentWeather
+import com.example.weather.ui.screens.extendedweathercomponents.ExtendedWeather
 
 enum class WeatherTabScreen {
     Current, FiveDays
@@ -26,22 +31,27 @@ enum class WeatherTabScreen {
 fun WeatherScreen(weatherViewModel: WeatherViewModel = viewModel()) {
     val weatherState: WeatherState by weatherViewModel.weatherState.observeAsState(WeatherState())
     val selectedTabScreen by weatherViewModel.selectedTabScreen.observeAsState(WeatherTabScreen.Current)
+    val cityName: String by weatherViewModel.cityNameTextFieldValue.observeAsState("")
 
-    WeatherScreenComponent(
+    WeatherScreen(
         weatherState = weatherState,
         selectedTabScreen = selectedTabScreen,
         onSelectedTabScreenChanged = { weatherViewModel.onSelectedTabScreenChanged(it) },
-        fetchWeatherData = { weatherViewModel.fetchWeatherData() }
+        fetchWeatherData = { weatherViewModel.fetchWeatherData() },
+        cityName = cityName,
+        onCityNameChange = { weatherViewModel.onTextFieldValueChanged(it) }
     )
 }
 
 @ExperimentalAnimationApi
 @Composable
-fun WeatherScreenComponent(
+fun WeatherScreen(
     weatherState: WeatherState,
     selectedTabScreen: WeatherTabScreen,
     onSelectedTabScreenChanged: (WeatherTabScreen) -> Unit,
-    fetchWeatherData: () -> Unit
+    fetchWeatherData: () -> Unit,
+    cityName: String,
+    onCityNameChange: (String) -> Unit
 ) {
 
     Column(
@@ -50,7 +60,11 @@ fun WeatherScreenComponent(
             .background(color = MaterialTheme.colors.background)
     ) {
 
-        SearchBox()
+        SearchBox(
+            cityName = cityName,
+            onCityNameChange = onCityNameChange,
+            fetchWeatherData = fetchWeatherData
+        )
 
         Tabs(
             WeatherTabScreen.values().toList(),

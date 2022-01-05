@@ -16,4 +16,6 @@ interface WeatherDao {
     @Query(value = "Select * from weather")
     fun getWeather(): Flow<WeatherEntity>
 
+    @Query(value = "Select count(*) from weather")
+    suspend fun getWeatherCount(): Int
 }

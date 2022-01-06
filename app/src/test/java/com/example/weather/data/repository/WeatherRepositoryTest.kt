@@ -3,6 +3,10 @@ package com.example.weather.data.repository
 import android.content.SharedPreferences
 import com.example.weather.data.localdatabase.WeatherDao
 import com.example.weather.data.networking.WeatherApi
+import com.example.weather.data.networking.model.CurrentWeatherApi
+import com.example.weather.data.networking.model.ExtendedWeatherApi
+import com.example.weather.data.networking.model.WeatherModelApi
+import com.example.weather.data.repository.mapper.toWeatherDomain
 import com.example.weather.data.repository.mapper.toWeatherEntity
 import com.example.weather.domain.repository.Repository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,6 +24,9 @@ class WeatherRepositoryTest {
 
     private lateinit var spyRepository: Repository
 
+    private lateinit var currentWeatherApi: CurrentWeatherApi
+    private lateinit var extendedWeatherApi: ExtendedWeatherApi
+
     @Mock
     private lateinit var weatherDao: WeatherDao
 
@@ -35,13 +42,11 @@ class WeatherRepositoryTest {
     @ExperimentalCoroutinesApi
     @Before
     fun setup() = runBlockingTest {
+        currentWeatherApi = WeatherApiFactory.makeCurrentWeatherApi()
+        extendedWeatherApi = WeatherApiFactory.makeExtendedWeatherApi()
+        whenever(weatherApi.getCurrentWeather(any(), any(), any())).thenReturn(currentWeatherApi)
+        whenever(weatherApi.getExtendedWeather(any(), any(), any())).thenReturn(extendedWeatherApi)
         whenever(sharedPreferences.edit()).thenReturn(sharedPreferencesEditor)
-        whenever(
-            weatherApi.getCurrentWeather(any(), any(), any())
-        ).thenReturn(WeatherApiFactory.makeCurrentWeatherApi())
-        whenever(
-            weatherApi.getExtendedWeather(any(), any(), any())
-        ).thenReturn(WeatherApiFactory.makeExtendedWeatherApi())
         repository = WeatherRepository(weatherDao, weatherApi, sharedPreferences)
         spyRepository = spy(repository)
     }
@@ -116,5 +121,13 @@ class WeatherRepositoryTest {
             verify(weatherApi).getCurrentWeather(any(), any(), any())
             verify(weatherApi).getExtendedWeather(any(), any(), any())
         }
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun fetchWeatherFromApi_shouldReturnWeatherMappedToDomain() = runBlockingTest {
+        val weather = WeatherModelApi(currentWeatherApi, extendedWeatherApi).toWeatherDomain()
+        val returnedWeather = spyRepository.fetchWeatherFromApi(null)
+        assert(returnedWeather == weather)
     }
 }

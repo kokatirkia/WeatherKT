@@ -3,7 +3,10 @@ package com.example.weather.data.repository
 import android.content.SharedPreferences
 import com.example.weather.data.localdatabase.WeatherDao
 import com.example.weather.data.networking.WeatherApi
+import com.example.weather.data.repository.mapper.toWeatherEntity
 import com.example.weather.domain.repository.Repository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -56,4 +59,13 @@ class WeatherRepositoryTest {
         repository.saveCityInPreferences(city)
         verify(sharedPreferencesEditor, never()).putString(any(), eq(city))
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun saveWeatherInLocalDatabase_shouldMapWeatherToEntityAndCallWeatherDaoInsertWeather() =
+        runBlockingTest {
+            val weather = WeatherFactory.makeWeather()
+            repository.saveWeatherInLocalDatabase(weather)
+            verify(weatherDao).insertWeather(weather.toWeatherEntity())
+        }
 }

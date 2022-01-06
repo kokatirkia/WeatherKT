@@ -18,6 +18,8 @@ import org.mockito.kotlin.*
 class WeatherRepositoryTest {
     private lateinit var repository: Repository
 
+    private lateinit var spyRepository: Repository
+
     @Mock
     private lateinit var weatherDao: WeatherDao
 
@@ -30,10 +32,18 @@ class WeatherRepositoryTest {
     @Mock
     private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
 
+    @ExperimentalCoroutinesApi
     @Before
-    fun setup() {
+    fun setup() = runBlockingTest {
         whenever(sharedPreferences.edit()).thenReturn(sharedPreferencesEditor)
+        whenever(
+            weatherApi.getCurrentWeather(any(), any(), any())
+        ).thenReturn(WeatherApiFactory.makeCurrentWeatherApi())
+        whenever(
+            weatherApi.getExtendedWeather(any(), any(), any())
+        ).thenReturn(WeatherApiFactory.makeExtendedWeatherApi())
         repository = WeatherRepository(weatherDao, weatherApi, sharedPreferences)
+        spyRepository = spy(repository)
     }
 
     @Test
@@ -68,4 +78,43 @@ class WeatherRepositoryTest {
             repository.saveWeatherInLocalDatabase(weather)
             verify(weatherDao).insertWeather(weather.toWeatherEntity())
         }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun fetchWeatherFromApi_shouldCallSaveCityInPreferences() = runBlockingTest {
+        spyRepository.fetchWeatherFromApi(null)
+        verify(spyRepository).saveCityInPreferences(null)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun fetchWeatherFromApi_whenCityNameIsNullShouldGetFromPreferences() = runBlockingTest {
+        spyRepository.fetchWeatherFromApi(null)
+        verify(sharedPreferences).getString(any(), any())
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun fetchWeatherFromApi_whenCityNameIsEmptyShouldGetFromPreferences() = runBlockingTest {
+        spyRepository.fetchWeatherFromApi("")
+        verify(sharedPreferences).getString(any(), any())
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun fetchWeatherFromApi_whenCityNameIsNotNullOrEmptyShouldNotGetFromPreferences() =
+        runBlockingTest {
+            spyRepository.fetchWeatherFromApi("test")
+            verify(sharedPreferences, never()).getString(any(), any())
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun fetchWeatherFromApi_shouldCallApiMethods() = runBlockingTest {
+        spyRepository.fetchWeatherFromApi(null)
+        inOrder(weatherApi) {
+            verify(weatherApi).getCurrentWeather(any(), any(), any())
+            verify(weatherApi).getExtendedWeather(any(), any(), any())
+        }
+    }
 }

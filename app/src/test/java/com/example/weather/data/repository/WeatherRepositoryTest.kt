@@ -10,6 +10,7 @@ import com.example.weather.data.repository.mapper.toWeatherDomain
 import com.example.weather.data.repository.mapper.toWeatherEntity
 import com.example.weather.domain.repository.Repository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
@@ -129,5 +130,24 @@ class WeatherRepositoryTest {
         val weather = WeatherModelApi(currentWeatherApi, extendedWeatherApi).toWeatherDomain()
         val returnedWeather = spyRepository.fetchWeatherFromApi(null)
         assert(returnedWeather == weather)
+    }
+
+    @Test
+    fun getWeatherFromLocalDatabase_shouldCallWeatherDaoGetWeather() {
+        repository.getWeatherFromLocalDatabase()
+        verify(weatherDao).getWeather()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun getWeatherFromLocalDatabase_shouldReturnFlowOfWeatherDomain() = runBlockingTest {
+        val weatherEntity = WeatherEntityFactory.makeWeatherEntity()
+        val weatherEntityFlow = flow { emit(weatherEntity) }
+        val weatherDomainFlow = weatherEntityFlow.filterNotNull().map { it.toWeatherDomain() }
+
+        whenever(weatherDao.getWeather()).thenReturn(weatherEntityFlow)
+        val returnedWeather = repository.getWeatherFromLocalDatabase()
+
+        assert(returnedWeather.take(1).toList().contains(weatherDomainFlow.first()))
     }
 }

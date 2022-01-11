@@ -9,7 +9,6 @@ import com.example.weather.ui.model.WeatherState
 import com.example.weather.ui.model.mapper.toWeatherUi
 import com.example.weather.ui.screens.WeatherTabScreen
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
@@ -50,9 +49,6 @@ class WeatherViewModelTest {
     @ExperimentalCoroutinesApi
     @Before
     fun setup() {
-        whenever(fetchWeatherFromLocalSourceUseCase.invoke())
-            .thenReturn(flow { emit(WeatherFactory.makeWeather()) })
-
         weatherViewModel = WeatherViewModel(
             fetchWeatherFromApiUseCase,
             fetchWeatherFromLocalSourceUseCase
@@ -103,8 +99,7 @@ class WeatherViewModelTest {
         coroutineRule.pauseDispatcher()
 
         val weather = WeatherFactory.makeWeather()
-        val weatherFlow = flow { emit(weather) }
-        whenever(fetchWeatherFromLocalSourceUseCase.invoke()).thenReturn(weatherFlow)
+        whenever(fetchWeatherFromLocalSourceUseCase.invoke()).thenReturn(weather)
 
         weatherViewModel.fetchWeatherData()
 

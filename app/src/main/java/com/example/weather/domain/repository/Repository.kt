@@ -1,10 +1,9 @@
 package com.example.weather.domain.repository
 
 import com.example.weather.domain.model.Weather
-import kotlinx.coroutines.flow.Flow
 
 interface Repository {
-    fun getWeatherFromLocalDatabase(): Flow<Weather>
+    suspend fun getWeatherFromLocalDatabase(): Weather?
 
     suspend fun saveWeatherInLocalDatabase(weather: Weather)
 

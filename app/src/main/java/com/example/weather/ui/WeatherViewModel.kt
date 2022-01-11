@@ -11,7 +11,6 @@ import com.example.weather.ui.model.WeatherState
 import com.example.weather.ui.model.WeatherUi
 import com.example.weather.ui.model.mapper.toWeatherUi
 import com.example.weather.ui.screens.WeatherTabScreen
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class WeatherViewModel @ViewModelInject constructor(
@@ -45,10 +44,10 @@ class WeatherViewModel @ViewModelInject constructor(
         _weatherState.value = _weatherState.value!!.copy(loading = true)
 
         viewModelScope.launch {
-            val errorMessage =
+            val errorMessage: String? =
                 fetchWeatherFromApiUseCase.invoke(_cityNameTextFieldValue.value)?.value
-            val weatherUi: WeatherUi =
-                fetchWeatherFromLocalSourceUseCase.invoke().first().toWeatherUi()
+            val weatherUi: WeatherUi? =
+                fetchWeatherFromLocalSourceUseCase.invoke()?.toWeatherUi()
 
             _weatherState.value = _weatherState.value!!.copy(
                 errorMessage = errorMessage,

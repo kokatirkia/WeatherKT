@@ -9,9 +9,6 @@ import com.example.weather.data.repository.mapper.toWeatherEntity
 import com.example.weather.domain.model.Weather
 import com.example.weather.domain.repository.Repository
 import com.example.weather.utils.Constants
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,8 +20,8 @@ class WeatherRepository @Inject constructor(
 ) : Repository {
     private val cityKey = "city"
 
-    override fun getWeatherFromLocalDatabase(): Flow<Weather> {
-        return weatherDao.getWeather().filterNotNull().map { it.toWeatherDomain() }
+    override suspend fun getWeatherFromLocalDatabase(): Weather? {
+        return weatherDao.getWeather()?.toWeatherDomain()
     }
 
     override suspend fun fetchWeatherFromApi(city: String?): Weather {

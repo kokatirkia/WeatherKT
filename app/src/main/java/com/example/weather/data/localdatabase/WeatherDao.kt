@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.weather.data.localdatabase.model.WeatherEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WeatherDao {
@@ -14,7 +13,7 @@ interface WeatherDao {
     suspend fun insertWeather(weatherEntity: WeatherEntity)
 
     @Query(value = "Select * from weather")
-    fun getWeather(): Flow<WeatherEntity>
+    suspend fun getWeather(): WeatherEntity?
 
     @Query(value = "Select count(*) from weather")
     suspend fun getWeatherCount(): Int

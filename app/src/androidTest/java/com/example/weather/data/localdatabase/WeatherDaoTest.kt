@@ -5,8 +5,6 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
@@ -42,7 +40,7 @@ class WeatherDaoTest {
     fun insertWeatherAndGetBack() = runBlockingTest {
         val weatherEntity = WeatherEntityFactory.makeWeatherEntity()
         weatherDao.insertWeather(weatherEntity)
-        val weatherFromDb = weatherDao.getWeather().take(1).toList()[0]
+        val weatherFromDb = weatherDao.getWeather()
         assert(weatherFromDb == weatherEntity)
     }
 
@@ -57,7 +55,7 @@ class WeatherDaoTest {
         val weatherCount = weatherDao.getWeatherCount()
         assert(weatherCount == 1)
 
-        val weatherFromDb = weatherDao.getWeather().take(1).toList()[0]
+        val weatherFromDb = weatherDao.getWeather()
         assert(weatherFromDb == weatherEntitySecond)
     }
 }

@@ -3,8 +3,6 @@ package com.example.weather.domain.usecases
 import com.example.weather.data.repository.WeatherFactory
 import com.example.weather.domain.repository.Repository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
@@ -30,12 +28,11 @@ class FetchWeatherFromLocalSourceUseCaseTest {
     fun fetchWeatherFromLocalSourceUseCase_shouldCallRepositoryGetWeatherFromLocalDatabase() =
         runBlockingTest {
             val weatherDomain = WeatherFactory.makeWeather()
-            val weatherDomainFlow = flow { emit(weatherDomain) }
-            whenever(repository.getWeatherFromLocalDatabase()).thenReturn(weatherDomainFlow)
+            whenever(repository.getWeatherFromLocalDatabase()).thenReturn(weatherDomain)
 
             val returnedWeather = fetchWeatherFromLocalSourceUseCase.invoke()
 
             verify(repository).getWeatherFromLocalDatabase()
-            assert(returnedWeather.first() == weatherDomainFlow.first())
+            assert(returnedWeather == weatherDomain)
         }
 }

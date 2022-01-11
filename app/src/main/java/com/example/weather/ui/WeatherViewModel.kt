@@ -41,17 +41,20 @@ class WeatherViewModel @ViewModelInject constructor(
         _selectedTabScreen.value = newTabScreen
     }
 
-    fun fetchWeatherData() = viewModelScope.launch {
+    fun fetchWeatherData() {
         _weatherState.value = _weatherState.value!!.copy(loading = true)
 
-        val errorMessage =
-            fetchWeatherFromApiUseCase.invoke(_cityNameTextFieldValue.value)?.value
-        val weatherUi: WeatherUi = fetchWeatherFromLocalSourceUseCase.invoke().first().toWeatherUi()
+        viewModelScope.launch {
+            val errorMessage =
+                fetchWeatherFromApiUseCase.invoke(_cityNameTextFieldValue.value)?.value
+            val weatherUi: WeatherUi =
+                fetchWeatherFromLocalSourceUseCase.invoke().first().toWeatherUi()
 
-        _weatherState.value = _weatherState.value!!.copy(
-            errorMessage = errorMessage,
-            weatherUi = weatherUi,
-            loading = false
-        )
+            _weatherState.value = _weatherState.value!!.copy(
+                errorMessage = errorMessage,
+                weatherUi = weatherUi,
+                loading = false
+            )
+        }
     }
 }

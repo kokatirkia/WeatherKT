@@ -8,10 +8,8 @@ import com.example.weather.domain.usecases.FetchWeatherFromLocalSourceUseCase
 import com.example.weather.ui.model.WeatherState
 import com.example.weather.ui.model.mapper.toWeatherUi
 import com.example.weather.ui.screens.WeatherTabScreen
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
@@ -102,19 +100,24 @@ class WeatherViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun fetchWeatherData_shouldChangeWeatherState() = coroutineRule.runBlockingTest {
-        launch(Dispatchers.Main) {
-            val weather = WeatherFactory.makeWeather()
-            val weatherFlow = flow { emit(weather) }
-            whenever(fetchWeatherFromLocalSourceUseCase.invoke()).thenReturn(weatherFlow)
+        coroutineRule.pauseDispatcher()
 
-            weatherViewModel.fetchWeatherData()
+        val weather = WeatherFactory.makeWeather()
+        val weatherFlow = flow { emit(weather) }
+        whenever(fetchWeatherFromLocalSourceUseCase.invoke()).thenReturn(weatherFlow)
 
-            val weatherState = WeatherState(
-                weatherUi = weather.toWeatherUi(),
-                errorMessage = null,
-                loading = false
-            )
-            verify(weatherStateObserver).onChanged(eq(weatherState))
-        }
+        weatherViewModel.fetchWeatherData()
+
+        assert(weatherViewModel.weatherState.value?.loading ?: false)
+
+        coroutineRule.resumeDispatcher()
+
+        val weatherState = WeatherState(
+            weatherUi = weather.toWeatherUi(),
+            errorMessage = null,
+            loading = false
+        )
+
+        verify(weatherStateObserver).onChanged(eq(weatherState))
     }
 }

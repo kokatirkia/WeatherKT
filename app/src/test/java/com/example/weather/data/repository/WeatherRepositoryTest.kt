@@ -76,6 +76,12 @@ class WeatherRepositoryTest {
         verify(sharedPreferencesEditor, never()).putString(any(), eq(city))
     }
 
+    @Test
+    fun getCityFromPreferences_shouldGetCityFromPreferences() {
+        repository.getCityFromPreferences()
+        verify(sharedPreferences).getString(any(), any())
+    }
+
     @ExperimentalCoroutinesApi
     @Test
     fun saveWeatherInLocalDatabase_shouldMapWeatherToEntityAndCallWeatherDaoInsertWeather() =
@@ -87,23 +93,40 @@ class WeatherRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApi_shouldCallSaveCityInPreferences() = runBlockingTest {
+    fun fetchWeatherFromApi_whenCityNameIsNotNullOrEmptyShouldSaveInPreferences() =
+        runBlockingTest {
+            val city = "Tbilisi"
+            spyRepository.fetchWeatherFromApi(city)
+            verify(spyRepository).saveCityInPreferences(city)
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun fetchWeatherFromApi_whenCityNameIsNullShouldNotSaveInPreferences() = runBlockingTest {
         spyRepository.fetchWeatherFromApi(null)
-        verify(spyRepository).saveCityInPreferences(null)
+        verify(spyRepository, never()).saveCityInPreferences(null)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun fetchWeatherFromApi_whenCityNameIsEmptyShouldNotSaveInPreferences() = runBlockingTest {
+        val city = ""
+        spyRepository.fetchWeatherFromApi(city)
+        verify(spyRepository, never()).saveCityInPreferences(city)
     }
 
     @ExperimentalCoroutinesApi
     @Test
     fun fetchWeatherFromApi_whenCityNameIsNullShouldGetFromPreferences() = runBlockingTest {
         spyRepository.fetchWeatherFromApi(null)
-        verify(sharedPreferences).getString(any(), any())
+        verify(spyRepository).getCityFromPreferences()
     }
 
     @ExperimentalCoroutinesApi
     @Test
     fun fetchWeatherFromApi_whenCityNameIsEmptyShouldGetFromPreferences() = runBlockingTest {
         spyRepository.fetchWeatherFromApi("")
-        verify(sharedPreferences).getString(any(), any())
+        verify(spyRepository).getCityFromPreferences()
     }
 
     @ExperimentalCoroutinesApi
@@ -111,7 +134,7 @@ class WeatherRepositoryTest {
     fun fetchWeatherFromApi_whenCityNameIsNotNullOrEmptyShouldNotGetFromPreferences() =
         runBlockingTest {
             spyRepository.fetchWeatherFromApi("test")
-            verify(sharedPreferences, never()).getString(any(), any())
+            verify(spyRepository, never()).getCityFromPreferences()
         }
 
     @ExperimentalCoroutinesApi

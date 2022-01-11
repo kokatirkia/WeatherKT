@@ -10,5 +10,7 @@ interface Repository {
 
     suspend fun fetchWeatherFromApi(city: String?): Weather
 
+    fun getCityFromPreferences(): String
+
     fun saveCityInPreferences(city: String?)
 }

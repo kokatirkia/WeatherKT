@@ -28,11 +28,12 @@ class WeatherRepository @Inject constructor(
     }
 
     override suspend fun fetchWeatherFromApi(city: String?): Weather {
-        saveCityInPreferences(city)
-
-        val cityName =
-            if (city.isNullOrEmpty()) sharedPreferences.getString(cityKey, "Tbilisi").toString()
-            else city
+        val cityName = if (city.isNullOrEmpty()) {
+            getCityFromPreferences()
+        } else {
+            saveCityInPreferences(city)
+            city
+        }
 
         val apiCurrentWeather = weatherApi.getCurrentWeather(
             cityName,
@@ -50,6 +51,11 @@ class WeatherRepository @Inject constructor(
 
     override suspend fun saveWeatherInLocalDatabase(weather: Weather) {
         weatherDao.insertWeather(weather.toWeatherEntity())
+    }
+
+    override fun getCityFromPreferences(): String {
+        val defaultCityName = "Tbilisi"
+        return sharedPreferences.getString(cityKey, defaultCityName).toString()
     }
 
     override fun saveCityInPreferences(city: String?) {

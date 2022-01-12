@@ -52,7 +52,7 @@ class WeatherRepositoryTest {
     }
 
     @Test
-    fun saveCityInPreferences_shouldSaveInPreferences() {
+    fun `saveCityInPreferences should save in preferences`() {
         val city = "cityName"
         repository.saveCityInPreferences(city)
         inOrder(sharedPreferencesEditor) {
@@ -62,28 +62,28 @@ class WeatherRepositoryTest {
     }
 
     @Test
-    fun saveCityInPreferences_shouldNotSaveInPreferencesIfNull() {
+    fun `saveCityInPreferences should not save in references if city is null`() {
         val city: String? = null
         repository.saveCityInPreferences(city)
         verify(sharedPreferencesEditor, never()).putString(any(), eq(city))
     }
 
     @Test
-    fun saveCityInPreferences_shouldNotSaveInPreferencesIfEmpty() {
+    fun `saveCityInPreferences should not save in preferences if city is empty`() {
         val city = ""
         repository.saveCityInPreferences(city)
         verify(sharedPreferencesEditor, never()).putString(any(), eq(city))
     }
 
     @Test
-    fun getCityFromPreferences_shouldGetCityFromPreferences() {
+    fun `getCityFromPreferences should get city from preferences`() {
         repository.getCityFromPreferences()
         verify(sharedPreferences).getString(any(), any())
     }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun saveWeatherInLocalDatabase_shouldMapWeatherToEntityAndCallWeatherDaoInsertWeather() =
+    fun `saveWeatherInLocalDatabase should map weather to entity and call weatherDao insertWeather`() =
         runBlockingTest {
             val weather = WeatherFactory.makeWeather()
             repository.saveWeatherInLocalDatabase(weather)
@@ -92,7 +92,7 @@ class WeatherRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApi_whenCityNameIsNotNullOrEmptyShouldSaveInPreferences() =
+    fun `fetchWeatherFromApi when city name is not null or empty should save in preferences`() =
         runBlockingTest {
             val city = "Tbilisi"
             spyRepository.fetchWeatherFromApi(city)
@@ -101,36 +101,40 @@ class WeatherRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApi_whenCityNameIsNullShouldNotSaveInPreferences() = runBlockingTest {
-        spyRepository.fetchWeatherFromApi(null)
-        verify(spyRepository, never()).saveCityInPreferences(null)
-    }
+    fun `fetchWeatherFromApi when city name is null should not save in preferences`() =
+        runBlockingTest {
+            spyRepository.fetchWeatherFromApi(null)
+            verify(spyRepository, never()).saveCityInPreferences(null)
+        }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApi_whenCityNameIsEmptyShouldNotSaveInPreferences() = runBlockingTest {
-        val city = ""
-        spyRepository.fetchWeatherFromApi(city)
-        verify(spyRepository, never()).saveCityInPreferences(city)
-    }
+    fun `fetchWeatherFromApi when city name is empty should not save in preferences`() =
+        runBlockingTest {
+            val city = ""
+            spyRepository.fetchWeatherFromApi(city)
+            verify(spyRepository, never()).saveCityInPreferences(city)
+        }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApi_whenCityNameIsNullShouldGetFromPreferences() = runBlockingTest {
-        spyRepository.fetchWeatherFromApi(null)
-        verify(spyRepository).getCityFromPreferences()
-    }
+    fun `fetchWeatherFromApi when city name is null should get from preferences`() =
+        runBlockingTest {
+            spyRepository.fetchWeatherFromApi(null)
+            verify(spyRepository).getCityFromPreferences()
+        }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApi_whenCityNameIsEmptyShouldGetFromPreferences() = runBlockingTest {
-        spyRepository.fetchWeatherFromApi("")
-        verify(spyRepository).getCityFromPreferences()
-    }
+    fun `fetchWeatherFromApi when city name is empty should get from preferences`() =
+        runBlockingTest {
+            spyRepository.fetchWeatherFromApi("")
+            verify(spyRepository).getCityFromPreferences()
+        }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApi_whenCityNameIsNotNullOrEmptyShouldNotGetFromPreferences() =
+    fun `fetchWeatherFromApi when city name is not null or empty should not get from preferences`() =
         runBlockingTest {
             spyRepository.fetchWeatherFromApi("test")
             verify(spyRepository, never()).getCityFromPreferences()
@@ -138,7 +142,7 @@ class WeatherRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApi_shouldCallApiMethods() = runBlockingTest {
+    fun `fetchWeatherFromApi should call api methods`() = runBlockingTest {
         spyRepository.fetchWeatherFromApi(null)
         inOrder(weatherApi) {
             verify(weatherApi).getCurrentWeather(any(), any(), any())
@@ -148,7 +152,7 @@ class WeatherRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApi_shouldReturnWeatherMappedToDomain() = runBlockingTest {
+    fun `fetchWeatherFromApi should return weather mapped to domain`() = runBlockingTest {
         val weather = WeatherModelApi(currentWeatherApi, extendedWeatherApi).toWeatherDomain()
         val returnedWeather = spyRepository.fetchWeatherFromApi(null)
         assert(returnedWeather == weather)
@@ -156,14 +160,14 @@ class WeatherRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getWeatherFromLocalDatabase_shouldCallWeatherDaoGetWeather() = runBlockingTest {
+    fun `getWeatherFromLocalDatabase should call weatherDao getWeather`() = runBlockingTest {
         repository.getWeatherFromLocalDatabase()
         verify(weatherDao).getWeather()
     }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getWeatherFromLocalDatabase_shouldReturnWeatherDomain() = runBlockingTest {
+    fun `getWeatherFromLocalDatabase should return weather mapped to domain`() = runBlockingTest {
         val weatherEntity = WeatherEntityFactory.makeWeatherEntity()
         val weatherDomain = weatherEntity.toWeatherDomain()
 

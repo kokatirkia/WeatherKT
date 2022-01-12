@@ -61,15 +61,16 @@ class WeatherViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun cityNameTextFieldValue_InitialValueShouldBeEmptyString() = coroutineRule.runBlockingTest {
-        val textFieldValue = weatherViewModel.cityNameTextFieldValue.value
+    fun `cityNameTextFieldValue initial value should be empty string`() =
+        coroutineRule.runBlockingTest {
+            val textFieldValue = weatherViewModel.cityNameTextFieldValue.value
 
-        assert(textFieldValue == "")
-    }
+            assert(textFieldValue == "")
+        }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun onTextFieldValueChanged_shouldChangeValue() = coroutineRule.runBlockingTest {
+    fun `onTextFieldValueChanged should change value`() = coroutineRule.runBlockingTest {
         val newTextValue = "newCity"
         weatherViewModel.onTextFieldValueChanged(newTextValue)
 
@@ -78,7 +79,7 @@ class WeatherViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun selectedTabScreen_InitialValueShouldBeCurrent() = coroutineRule.runBlockingTest {
+    fun `selectedTabScreen initial value should be current`() = coroutineRule.runBlockingTest {
         val tabScreen = weatherViewModel.selectedTabScreen.value
 
         assert(tabScreen == WeatherTabScreen.Current)
@@ -86,7 +87,7 @@ class WeatherViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun onSelectedTabScreenChanged_shouldChangeTabScreen() = coroutineRule.runBlockingTest {
+    fun `onSelectedTabScreenChanged should change TabScreen`() = coroutineRule.runBlockingTest {
         val weatherTabScreen = WeatherTabScreen.FiveDays
         weatherViewModel.onSelectedTabScreenChanged(weatherTabScreen)
 
@@ -95,7 +96,7 @@ class WeatherViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherData_shouldChangeWeatherState() = coroutineRule.runBlockingTest {
+    fun `fetchWeatherData should change weatherState`() = coroutineRule.runBlockingTest {
         coroutineRule.pauseDispatcher()
 
         val weather = WeatherFactory.makeWeather()

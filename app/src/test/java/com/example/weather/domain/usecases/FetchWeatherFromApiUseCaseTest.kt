@@ -33,7 +33,7 @@ class FetchWeatherFromApiUseCaseTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApiUseCase_shouldCallRepositoryFetchWeatherFromApiAndThenInsertInLocalDatabase() =
+    fun `fetchWeatherFromApiUseCase should call repository fetchWeatherFromApi and then saveWeatherInLocalDatabase`() =
         runBlockingTest {
             val weatherDomain = WeatherFactory.makeWeather()
             whenever(repository.fetchWeatherFromApi(cityName)).thenReturn(weatherDomain)
@@ -47,7 +47,7 @@ class FetchWeatherFromApiUseCaseTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApiUseCase_whenIOExceptionIsThrownShouldReturnNoInternetMessage() =
+    fun `fetchWeatherFromApiUseCase when IOException is thrown should return NoInternetConnection`() =
         runBlockingTest {
             given(repository.fetchWeatherFromApi(cityName)).willAnswer { throw IOException() }
             val response = fetchWeatherFromApiUseCase.invoke(cityName)
@@ -57,7 +57,7 @@ class FetchWeatherFromApiUseCaseTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApiUseCase_whenHttpExceptionIsThrownShouldReturnCityNotFoundMessage() =
+    fun `fetchWeatherFromApiUseCase when HttpException is thrown should return CityNotFound`() =
         runBlockingTest {
             given(repository.fetchWeatherFromApi(cityName)).willAnswer {
                 throw HttpException(
@@ -74,7 +74,7 @@ class FetchWeatherFromApiUseCaseTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromApiUseCase_whenExceptionIsThrownShouldReturnErrorWhileFetchingMessage() =
+    fun `fetchWeatherFromApiUseCase when Exception is thrown should return ErrorWhileFetching`() =
         runBlockingTest {
             given(repository.fetchWeatherFromApi(cityName)).willAnswer { throw Exception() }
             val response = fetchWeatherFromApiUseCase.invoke(cityName)

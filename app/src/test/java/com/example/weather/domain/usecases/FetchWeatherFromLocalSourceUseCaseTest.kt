@@ -25,7 +25,7 @@ class FetchWeatherFromLocalSourceUseCaseTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchWeatherFromLocalSourceUseCase_shouldCallRepositoryGetWeatherFromLocalDatabase() =
+    fun `fetchWeatherFromLocalSourceUseCase should call repository getWeatherFromLocalDatabase`() =
         runBlockingTest {
             val weatherDomain = WeatherFactory.makeWeather()
             whenever(repository.getWeatherFromLocalDatabase()).thenReturn(weatherDomain)

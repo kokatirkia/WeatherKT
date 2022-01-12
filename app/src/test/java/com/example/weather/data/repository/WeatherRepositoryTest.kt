@@ -11,6 +11,7 @@ import com.example.weather.data.repository.mapper.toWeatherEntity
 import com.example.weather.domain.repository.Repository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -155,7 +156,7 @@ class WeatherRepositoryTest {
     fun `fetchWeatherFromApi should return weather mapped to domain`() = runBlockingTest {
         val weather = WeatherModelApi(currentWeatherApi, extendedWeatherApi).toWeatherDomain()
         val returnedWeather = spyRepository.fetchWeatherFromApi(null)
-        assert(returnedWeather == weather)
+        assertEquals(returnedWeather, weather)
     }
 
     @ExperimentalCoroutinesApi
@@ -174,6 +175,6 @@ class WeatherRepositoryTest {
         whenever(weatherDao.getWeather()).thenReturn(weatherEntity)
         val returnedWeather = repository.getWeatherFromLocalDatabase()
 
-        assert(returnedWeather == weatherDomain)
+        assertEquals(returnedWeather, weatherDomain)
     }
 }

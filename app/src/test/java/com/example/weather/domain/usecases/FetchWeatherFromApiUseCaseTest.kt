@@ -7,6 +7,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -52,7 +53,7 @@ class FetchWeatherFromApiUseCaseTest {
             given(repository.fetchWeatherFromApi(cityName)).willAnswer { throw IOException() }
             val response = fetchWeatherFromApiUseCase.invoke(cityName)
 
-            assert(response == ErrorMessageEnum.NoInternetConnection)
+            assertEquals(response, ErrorMessageEnum.NoInternetConnection)
         }
 
     @ExperimentalCoroutinesApi
@@ -69,7 +70,7 @@ class FetchWeatherFromApiUseCaseTest {
             }
             val response = fetchWeatherFromApiUseCase.invoke(cityName)
 
-            assert(response == ErrorMessageEnum.CityNotFound)
+            assertEquals(response, ErrorMessageEnum.CityNotFound)
         }
 
     @ExperimentalCoroutinesApi
@@ -79,6 +80,6 @@ class FetchWeatherFromApiUseCaseTest {
             given(repository.fetchWeatherFromApi(cityName)).willAnswer { throw Exception() }
             val response = fetchWeatherFromApiUseCase.invoke(cityName)
 
-            assert(response == ErrorMessageEnum.ErrorWhileFetching)
+            assertEquals(response, ErrorMessageEnum.ErrorWhileFetching)
         }
 }

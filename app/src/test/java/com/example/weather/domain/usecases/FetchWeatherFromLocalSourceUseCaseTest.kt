@@ -4,6 +4,7 @@ import com.example.weather.data.repository.WeatherFactory
 import com.example.weather.domain.repository.Repository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,6 +34,6 @@ class FetchWeatherFromLocalSourceUseCaseTest {
             val returnedWeather = fetchWeatherFromLocalSourceUseCase.invoke()
 
             verify(repository).getWeatherFromLocalDatabase()
-            assert(returnedWeather == weatherDomain)
+            assertEquals(returnedWeather, weatherDomain)
         }
 }

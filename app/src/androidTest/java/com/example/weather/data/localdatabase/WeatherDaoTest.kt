@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,7 +42,7 @@ class WeatherDaoTest {
         val weatherEntity = WeatherEntityFactory.makeWeatherEntity()
         weatherDao.insertWeather(weatherEntity)
         val weatherFromDb = weatherDao.getWeather()
-        assert(weatherFromDb == weatherEntity)
+        assertEquals(weatherFromDb, weatherEntity)
     }
 
     @ExperimentalCoroutinesApi
@@ -53,9 +54,9 @@ class WeatherDaoTest {
         weatherDao.insertWeather(weatherEntitySecond)
 
         val weatherCount = weatherDao.getWeatherCount()
-        assert(weatherCount == 1)
+        assertEquals(weatherCount, 1)
 
         val weatherFromDb = weatherDao.getWeather()
-        assert(weatherFromDb == weatherEntitySecond)
+        assertEquals(weatherFromDb, weatherEntitySecond)
     }
 }

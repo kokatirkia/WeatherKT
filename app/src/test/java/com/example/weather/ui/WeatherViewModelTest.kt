@@ -10,6 +10,8 @@ import com.example.weather.ui.model.mapper.toWeatherUi
 import com.example.weather.ui.screens.WeatherTabScreen
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -65,7 +67,7 @@ class WeatherViewModelTest {
         coroutineRule.runBlockingTest {
             val textFieldValue = weatherViewModel.cityNameTextFieldValue.value
 
-            assert(textFieldValue == "")
+            assertEquals(textFieldValue, "")
         }
 
     @ExperimentalCoroutinesApi
@@ -82,7 +84,7 @@ class WeatherViewModelTest {
     fun `selectedTabScreen initial value should be current`() = coroutineRule.runBlockingTest {
         val tabScreen = weatherViewModel.selectedTabScreen.value
 
-        assert(tabScreen == WeatherTabScreen.Current)
+        assertEquals(tabScreen, WeatherTabScreen.Current)
     }
 
     @ExperimentalCoroutinesApi
@@ -104,7 +106,7 @@ class WeatherViewModelTest {
 
         weatherViewModel.fetchWeatherData()
 
-        assert(weatherViewModel.weatherState.value?.loading ?: false)
+        assertTrue(weatherViewModel.weatherState.value?.loading ?: false)
 
         coroutineRule.resumeDispatcher()
 

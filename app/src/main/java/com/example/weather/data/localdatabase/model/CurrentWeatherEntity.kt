@@ -16,7 +16,7 @@ data class WeatherDescriptionEntity(
 )
 
 data class MainEntity(
-    var temp: String,
+    var temp: Double,
     var feels_like: String,
     var pressure: Int,
     var humidity: Int

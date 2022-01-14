@@ -16,7 +16,7 @@ data class WeatherDescription(
 )
 
 data class Main(
-    var temp: String,
+    var temp: Double,
     var feelsLike: String,
     var pressure: Int,
     var humidity: Int

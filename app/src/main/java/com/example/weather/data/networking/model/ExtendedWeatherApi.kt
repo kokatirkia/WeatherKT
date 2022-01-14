@@ -38,7 +38,7 @@ data class MainExtendedApi(
     @SerializedName("temp")
     val temp: Double,
     @SerializedName("pressure")
-    val pressure: String,
+    val pressure: Int,
     @SerializedName("humidity")
-    val humidity: String
+    val humidity: Int
 )

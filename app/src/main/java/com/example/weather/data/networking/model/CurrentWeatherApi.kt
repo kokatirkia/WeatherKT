@@ -28,7 +28,7 @@ data class CurrentWeatherDataApi(
 
 data class MainApi(
     @SerializedName("temp")
-    var temp: String,
+    var temp: Double,
     @SerializedName("feels_like")
     var feelsLike: String,
     @SerializedName("pressure")

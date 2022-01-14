@@ -21,6 +21,6 @@ data class DescriptionExtendedEntity(
 
 data class MainExtendedEntity(
     val temp: Double,
-    val pressure: String,
-    val humidity: String
+    val pressure: Int,
+    val humidity: Int
 )

@@ -19,7 +19,7 @@ object WeatherFactory {
     fun makeWeather() = Weather(
         currentWeather = CurrentWeather(
             listOf(WeatherDescription(makeRandomString(), makeRandomString(), makeRandomString())),
-            Main(makeRandomString(), makeRandomString(), makeRandomInt(), makeRandomInt()),
+            Main(makeRandomDouble(), makeRandomString(), makeRandomInt(), makeRandomInt()),
             Wind(makeRandomDouble()),
             Sys(makeRandomLong(), makeRandomLong()),
             makeRandomLong(),
@@ -29,7 +29,7 @@ object WeatherFactory {
             listOf(
                 WeatherExtendedData(
                     makeRandomLong(),
-                    MainExtended(makeRandomDouble(), makeRandomString(), makeRandomString()),
+                    MainExtended(makeRandomDouble(), makeRandomInt(), makeRandomInt()),
                     makeRandomString(),
                     listOf(DescriptionExtended(makeRandomString(), makeRandomString())),
                     WindExtended(makeRandomDouble())

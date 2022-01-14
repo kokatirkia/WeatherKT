@@ -27,7 +27,7 @@ object WeatherEntityFactory {
                     makeRandomString()
                 )
             ),
-            MainEntity(makeRandomString(), makeRandomString(), makeRandomInt(), makeRandomInt()),
+            MainEntity(makeRandomDouble(), makeRandomString(), makeRandomInt(), makeRandomInt()),
             WindEntity(makeRandomDouble()),
             SysEntity(makeRandomLong(), makeRandomLong()),
             makeRandomLong(),
@@ -37,7 +37,7 @@ object WeatherEntityFactory {
             listOf(
                 WeatherExtendedDataEntity(
                     makeRandomLong(),
-                    MainExtendedEntity(makeRandomDouble(), makeRandomString(), makeRandomString()),
+                    MainExtendedEntity(makeRandomDouble(), makeRandomInt(), makeRandomInt()),
                     makeRandomString(),
                     listOf(DescriptionExtendedEntity(makeRandomString(), makeRandomString())),
                     WindExtendedEntity(makeRandomDouble())

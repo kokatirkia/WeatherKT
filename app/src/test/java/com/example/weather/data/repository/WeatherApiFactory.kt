@@ -18,7 +18,7 @@ object WeatherApiFactory {
 
     fun makeCurrentWeatherApi() = CurrentWeatherApi(
         listOf(CurrentWeatherDataApi(makeRandomString(), makeRandomString(), makeRandomString())),
-        MainApi(makeRandomString(), makeRandomString(), makeRandomInt(), makeRandomInt()),
+        MainApi(makeRandomDouble(), makeRandomString(), makeRandomInt(), makeRandomInt()),
         WindApi(makeRandomDouble()),
         SysApi(makeRandomLong(), makeRandomLong()),
         makeRandomLong(),
@@ -30,7 +30,7 @@ object WeatherApiFactory {
         listOf(
             WeatherDataApi(
                 makeRandomLong(),
-                MainExtendedApi(makeRandomDouble(), makeRandomString(), makeRandomString()),
+                MainExtendedApi(makeRandomDouble(), makeRandomInt(), makeRandomInt()),
                 makeRandomString(),
                 listOf(DescriptionExtendedApi(makeRandomString(), makeRandomString())),
                 WindExtendedApi(makeRandomDouble())

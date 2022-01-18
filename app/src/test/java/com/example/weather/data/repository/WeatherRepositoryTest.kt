@@ -53,7 +53,7 @@ class WeatherRepositoryTest {
     }
 
     @Test
-    fun `saveCityInPreferences should save in preferences`() {
+    fun `saveCityInPreferences should call putString and apply on preferences`() {
         val city = "cityName"
         repository.saveCityInPreferences(city)
         inOrder(sharedPreferencesEditor) {
@@ -63,21 +63,21 @@ class WeatherRepositoryTest {
     }
 
     @Test
-    fun `saveCityInPreferences should not save in references if city is null`() {
+    fun `saveCityInPreferences should not call putString on preferences if city is null`() {
         val city: String? = null
         repository.saveCityInPreferences(city)
         verify(sharedPreferencesEditor, never()).putString(any(), eq(city))
     }
 
     @Test
-    fun `saveCityInPreferences should not save in preferences if city is empty`() {
+    fun `saveCityInPreferences should not call putString on preferences if city is empty`() {
         val city = ""
         repository.saveCityInPreferences(city)
         verify(sharedPreferencesEditor, never()).putString(any(), eq(city))
     }
 
     @Test
-    fun `getCityFromPreferences should get city from preferences`() {
+    fun `getCityFromPreferences should call getString on preferences`() {
         repository.getCityFromPreferences()
         verify(sharedPreferences).getString(any(), any())
     }
@@ -93,7 +93,7 @@ class WeatherRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `fetchWeatherFromApi when city name is not null or empty should save in preferences`() =
+    fun `fetchWeatherFromApi when city name is not null or empty should call saveCityInPreferences`() =
         runBlockingTest {
             val city = "Tbilisi"
             spyRepository.fetchWeatherFromApi(city)
@@ -102,7 +102,7 @@ class WeatherRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `fetchWeatherFromApi when city name is null should not save in preferences`() =
+    fun `fetchWeatherFromApi when city name is null should not call saveCityInPreferences`() =
         runBlockingTest {
             spyRepository.fetchWeatherFromApi(null)
             verify(spyRepository, never()).saveCityInPreferences(null)
@@ -110,7 +110,7 @@ class WeatherRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `fetchWeatherFromApi when city name is empty should not save in preferences`() =
+    fun `fetchWeatherFromApi when city name is empty should not call saveCityInPreferences`() =
         runBlockingTest {
             val city = ""
             spyRepository.fetchWeatherFromApi(city)
@@ -119,7 +119,7 @@ class WeatherRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `fetchWeatherFromApi when city name is null should get from preferences`() =
+    fun `fetchWeatherFromApi when city name is null should call getCityFromPreferences`() =
         runBlockingTest {
             spyRepository.fetchWeatherFromApi(null)
             verify(spyRepository).getCityFromPreferences()
@@ -127,7 +127,7 @@ class WeatherRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `fetchWeatherFromApi when city name is empty should get from preferences`() =
+    fun `fetchWeatherFromApi when city name is empty should call getCityFromPreferences`() =
         runBlockingTest {
             spyRepository.fetchWeatherFromApi("")
             verify(spyRepository).getCityFromPreferences()
@@ -135,7 +135,7 @@ class WeatherRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `fetchWeatherFromApi when city name is not null or empty should not get from preferences`() =
+    fun `fetchWeatherFromApi when city name is not null or empty should not call getCityFromPreferences`() =
         runBlockingTest {
             spyRepository.fetchWeatherFromApi("test")
             verify(spyRepository, never()).getCityFromPreferences()

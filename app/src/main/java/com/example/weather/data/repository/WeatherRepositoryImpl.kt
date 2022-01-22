@@ -1,34 +1,29 @@
 package com.example.weather.data.repository
 
-import android.content.SharedPreferences
 import com.example.weather.data.localdatabase.WeatherDao
+import com.example.weather.data.localdatabase.preferences.WeatherPreferences
 import com.example.weather.data.networking.WeatherApi
 import com.example.weather.data.networking.model.WeatherModelApi
 import com.example.weather.data.repository.mapper.toWeatherDomain
 import com.example.weather.data.repository.mapper.toWeatherEntity
 import com.example.weather.domain.model.Weather
-import com.example.weather.domain.repository.Repository
+import com.example.weather.domain.repository.WeatherRepository
 import com.example.weather.utils.Constants
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WeatherRepository @Inject constructor(
+class WeatherRepositoryImpl @Inject constructor(
     private val weatherDao: WeatherDao,
     private val weatherApi: WeatherApi,
-    private val sharedPreferences: SharedPreferences,
-) : Repository {
-    private val cityKey = "city"
-
-    override suspend fun getWeatherFromLocalDatabase(): Weather? {
-        return weatherDao.getWeather()?.toWeatherDomain()
-    }
+    private val weatherPreferences: WeatherPreferences
+) : WeatherRepository {
 
     override suspend fun fetchWeatherFromApi(city: String?): Weather {
         val cityName = if (city.isNullOrEmpty()) {
-            getCityFromPreferences()
+            weatherPreferences.getCityName()
         } else {
-            saveCityInPreferences(city)
+            weatherPreferences.saveCityName(city)
             city
         }
 
@@ -50,16 +45,7 @@ class WeatherRepository @Inject constructor(
         weatherDao.insertWeather(weather.toWeatherEntity())
     }
 
-    override fun getCityFromPreferences(): String {
-        val defaultCityName = "Tbilisi"
-        return sharedPreferences.getString(cityKey, defaultCityName).toString()
-    }
-
-    override fun saveCityInPreferences(city: String?) {
-        if (!city.isNullOrEmpty()) {
-            val editor = sharedPreferences.edit()
-            editor.putString(cityKey, city)
-            editor.apply()
-        }
+    override suspend fun getWeatherFromLocalDatabase(): Weather? {
+        return weatherDao.getWeather()?.toWeatherDomain()
     }
 }

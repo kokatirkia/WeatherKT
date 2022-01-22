@@ -1,7 +1,7 @@
 package com.example.weather.domain.usecases
 
 import com.example.weather.data.repository.WeatherFactory
-import com.example.weather.domain.repository.Repository
+import com.example.weather.domain.repository.WeatherRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -23,13 +23,13 @@ import java.io.IOException
 @RunWith(MockitoJUnitRunner::class)
 class FetchWeatherFromApiUseCaseTest {
     @Mock
-    private lateinit var repository: Repository
+    private lateinit var weatherRepository: WeatherRepository
     private lateinit var fetchWeatherFromApiUseCase: FetchWeatherFromApiUseCase
     private val cityName = "Tbilisi"
 
     @Before
     fun setup() {
-        fetchWeatherFromApiUseCase = FetchWeatherFromApiUseCase(repository)
+        fetchWeatherFromApiUseCase = FetchWeatherFromApiUseCase(weatherRepository)
     }
 
     @ExperimentalCoroutinesApi
@@ -37,12 +37,12 @@ class FetchWeatherFromApiUseCaseTest {
     fun `fetchWeatherFromApiUseCase should call repository fetchWeatherFromApi and then saveWeatherInLocalDatabase`() =
         runBlockingTest {
             val weatherDomain = WeatherFactory.makeWeather()
-            whenever(repository.fetchWeatherFromApi(cityName)).thenReturn(weatherDomain)
+            whenever(weatherRepository.fetchWeatherFromApi(cityName)).thenReturn(weatherDomain)
             fetchWeatherFromApiUseCase.invoke(cityName)
 
-            inOrder(repository) {
-                verify(repository).fetchWeatherFromApi(cityName)
-                verify(repository).saveWeatherInLocalDatabase(weatherDomain)
+            inOrder(weatherRepository) {
+                verify(weatherRepository).fetchWeatherFromApi(cityName)
+                verify(weatherRepository).saveWeatherInLocalDatabase(weatherDomain)
             }
         }
 
@@ -50,7 +50,7 @@ class FetchWeatherFromApiUseCaseTest {
     @Test
     fun `fetchWeatherFromApiUseCase when IOException is thrown should return NoInternetConnection`() =
         runBlockingTest {
-            given(repository.fetchWeatherFromApi(cityName)).willAnswer { throw IOException() }
+            given(weatherRepository.fetchWeatherFromApi(cityName)).willAnswer { throw IOException() }
             val response = fetchWeatherFromApiUseCase.invoke(cityName)
 
             assertEquals(response, ErrorMessageEnum.NoInternetConnection)
@@ -60,7 +60,7 @@ class FetchWeatherFromApiUseCaseTest {
     @Test
     fun `fetchWeatherFromApiUseCase when HttpException is thrown should return CityNotFound`() =
         runBlockingTest {
-            given(repository.fetchWeatherFromApi(cityName)).willAnswer {
+            given(weatherRepository.fetchWeatherFromApi(cityName)).willAnswer {
                 throw HttpException(
                     Response.error<ResponseBody>(
                         500,
@@ -77,7 +77,7 @@ class FetchWeatherFromApiUseCaseTest {
     @Test
     fun `fetchWeatherFromApiUseCase when Exception is thrown should return ErrorWhileFetching`() =
         runBlockingTest {
-            given(repository.fetchWeatherFromApi(cityName)).willAnswer { throw Exception() }
+            given(weatherRepository.fetchWeatherFromApi(cityName)).willAnswer { throw Exception() }
             val response = fetchWeatherFromApiUseCase.invoke(cityName)
 
             assertEquals(response, ErrorMessageEnum.ErrorWhileFetching)

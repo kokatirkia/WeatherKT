@@ -1,7 +1,7 @@
 package com.example.weather.domain.usecases
 
 import com.example.weather.data.repository.WeatherFactory
-import com.example.weather.domain.repository.Repository
+import com.example.weather.domain.repository.WeatherRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
@@ -16,12 +16,12 @@ import org.mockito.kotlin.whenever
 @RunWith(MockitoJUnitRunner::class)
 class FetchWeatherFromLocalSourceUseCaseTest {
     @Mock
-    private lateinit var repository: Repository
+    private lateinit var weatherRepository: WeatherRepository
     private lateinit var fetchWeatherFromLocalSourceUseCase: FetchWeatherFromLocalSourceUseCase
 
     @Before
     fun setup() {
-        fetchWeatherFromLocalSourceUseCase = FetchWeatherFromLocalSourceUseCase(repository)
+        fetchWeatherFromLocalSourceUseCase = FetchWeatherFromLocalSourceUseCase(weatherRepository)
     }
 
     @ExperimentalCoroutinesApi
@@ -29,11 +29,11 @@ class FetchWeatherFromLocalSourceUseCaseTest {
     fun `fetchWeatherFromLocalSourceUseCase should call repository getWeatherFromLocalDatabase`() =
         runBlockingTest {
             val weatherDomain = WeatherFactory.makeWeather()
-            whenever(repository.getWeatherFromLocalDatabase()).thenReturn(weatherDomain)
+            whenever(weatherRepository.getWeatherFromLocalDatabase()).thenReturn(weatherDomain)
 
             val returnedWeather = fetchWeatherFromLocalSourceUseCase.invoke()
 
-            verify(repository).getWeatherFromLocalDatabase()
+            verify(weatherRepository).getWeatherFromLocalDatabase()
             assertEquals(returnedWeather, weatherDomain)
         }
 }

@@ -1,7 +1,7 @@
 package com.example.weather.di
 
-import com.example.weather.data.repository.WeatherRepository
-import com.example.weather.domain.repository.Repository
+import com.example.weather.data.repository.WeatherRepositoryImpl
+import com.example.weather.domain.repository.WeatherRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +14,6 @@ object ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideRepository(weatherRepository: WeatherRepository): Repository = weatherRepository
+    fun provideRepository(weatherRepositoryImpl: WeatherRepositoryImpl): WeatherRepository = weatherRepositoryImpl
 
 }

@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.weather.data.localdatabase.WeatherDb
+import com.example.weather.data.localdatabase.preferences.WeatherPreferences
+import com.example.weather.data.localdatabase.preferences.WeatherPreferencesImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,4 +35,10 @@ object DatabaseModule {
     @Provides
     fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
         context.getSharedPreferences(preferencesName, 0)
+
+    @Singleton
+    @Provides
+    fun provideWeatherPreferences(
+        weatherPreferencesImpl: WeatherPreferencesImpl
+    ): WeatherPreferences = weatherPreferencesImpl
 }

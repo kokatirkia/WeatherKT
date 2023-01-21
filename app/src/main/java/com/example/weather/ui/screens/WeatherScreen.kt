@@ -14,11 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weather.ui.WeatherViewModel
+import com.example.weather.ui.model.WeatherState
 import com.example.weather.ui.screens.commoncomponents.CircularProgressBar
 import com.example.weather.ui.screens.commoncomponents.ErrorMessage
 import com.example.weather.ui.screens.commoncomponents.SearchBox
 import com.example.weather.ui.screens.commoncomponents.Tabs
-import com.example.weather.ui.model.WeatherState
 import com.example.weather.ui.screens.currentweathercomponents.CurrentWeather
 import com.example.weather.ui.screens.extendedweathercomponents.ExtendedWeather
 
@@ -91,11 +91,9 @@ fun WeatherData(weatherState: WeatherState, selectedTabScreen: WeatherTabScreen)
         targetState = selectedTabScreen,
         transitionSpec = {
             if (targetState > initialState) {
-                slideInHorizontally({ width -> width }) + fadeIn() with
-                        slideOutHorizontally({ width -> -width }) + fadeOut()
+                slideInHorizontally() + fadeIn() with slideOutHorizontally() + fadeOut()
             } else {
-                slideInHorizontally({ width -> -width }) + fadeIn() with
-                        slideOutHorizontally({ width -> width }) + fadeOut()
+                slideInHorizontally() + fadeIn() with slideOutHorizontally() + fadeOut()
             }.using(
                 SizeTransform(clip = false)
             )

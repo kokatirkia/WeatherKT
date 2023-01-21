@@ -6,12 +6,12 @@ apply plugin: 'dagger.hilt.android.plugin'
 
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.example.weather"
         minSdkVersion 23
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

@@ -14,6 +14,7 @@ import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -28,13 +29,15 @@ fun ErrorMessage(fetchWeatherData: () -> Unit, errorMessage: String?) {
     ) {
         Text(
             text = errorMessage,
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier
+                .padding(10.dp)
+                .testTag("errorTestTag"),
             color = Color.White
         )
         IconButton(onClick = fetchWeatherData) {
             Icon(
                 Icons.Rounded.Refresh,
-                contentDescription = null,
+                contentDescription = "refreshIconButton",
                 tint = Color.White
             )
         }

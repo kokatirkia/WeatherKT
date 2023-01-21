@@ -1,6 +1,5 @@
 package com.example.weather.ui
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,9 +10,12 @@ import com.example.weather.ui.model.WeatherState
 import com.example.weather.ui.model.WeatherUi
 import com.example.weather.ui.model.mapper.toWeatherUi
 import com.example.weather.ui.screens.WeatherTabScreen
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class WeatherViewModel @ViewModelInject constructor(
+@HiltViewModel
+class WeatherViewModel @Inject constructor(
     private val fetchWeatherFromApiUseCase: FetchWeatherFromApiUseCase,
     private val fetchWeatherFromLocalSourceUseCase: FetchWeatherFromLocalSourceUseCase,
 ) : ViewModel() {

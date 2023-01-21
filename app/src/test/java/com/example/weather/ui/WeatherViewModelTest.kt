@@ -10,6 +10,8 @@ import com.example.weather.ui.model.WeatherState
 import com.example.weather.ui.model.mapper.toWeatherUi
 import com.example.weather.ui.screens.WeatherTabScreen
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.pauseDispatcher
+import kotlinx.coroutines.test.resumeDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.*
 import org.junit.Before

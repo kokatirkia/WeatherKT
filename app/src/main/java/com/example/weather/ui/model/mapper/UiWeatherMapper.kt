@@ -9,7 +9,7 @@ fun Weather.toWeatherUi() = WeatherUi(
         weather = currentWeather.weatherDescription.map {
             WeatherDescriptionUi(
                 main = it.main,
-                description = it.description.capitalize(),
+                description = it.description.replaceFirstChar(Char::uppercase),
                 icon = "${it.icon}.png"
             )
         },
@@ -40,7 +40,7 @@ fun Weather.toWeatherUi() = WeatherUi(
                 dtTxt = it.dtTxt,
                 weather = it.weather.map { description ->
                     DescriptionExtendedUi(
-                        description = description.description.capitalize(),
+                        description = description.description.replaceFirstChar(Char::uppercase),
                         icon = "${description.icon}.png"
                     )
                 },

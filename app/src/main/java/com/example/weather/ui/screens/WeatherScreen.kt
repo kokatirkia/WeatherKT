@@ -22,8 +22,8 @@ import com.example.weather.ui.screens.commoncomponents.Tabs
 import com.example.weather.ui.screens.currentweathercomponents.CurrentWeather
 import com.example.weather.ui.screens.extendedweathercomponents.ExtendedWeather
 
-enum class WeatherTabScreen {
-    Current, FiveDays
+enum class WeatherTabScreen(val title: String) {
+    Current("Current"), FiveDays("5 days")
 }
 
 @ExperimentalAnimationApi

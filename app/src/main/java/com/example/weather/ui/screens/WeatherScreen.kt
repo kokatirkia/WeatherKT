@@ -91,9 +91,11 @@ fun WeatherData(weatherState: WeatherState, selectedTabScreen: WeatherTabScreen)
         targetState = selectedTabScreen,
         transitionSpec = {
             if (targetState > initialState) {
-                slideInHorizontally() + fadeIn() with slideOutHorizontally() + fadeOut()
+                slideInHorizontally { width -> width } + fadeIn() with
+                        slideOutHorizontally { width -> -width } + fadeOut()
             } else {
-                slideInHorizontally() + fadeIn() with slideOutHorizontally() + fadeOut()
+                slideInHorizontally { width -> -width } + fadeIn() with
+                        slideOutHorizontally { width -> width } + fadeOut()
             }.using(
                 SizeTransform(clip = false)
             )

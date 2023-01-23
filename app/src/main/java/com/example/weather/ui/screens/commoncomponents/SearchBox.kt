@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -27,7 +29,8 @@ fun SearchBox(
     TextField(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 20.dp)
+            .semantics { contentDescription = "searchTextField" },
         value = cityName,
         onValueChange = onCityNameChange,
         trailingIcon = {
@@ -35,7 +38,11 @@ fun SearchBox(
                 fetchWeatherData()
                 focusManager.clearFocus()
             }) {
-                Icon(Icons.Rounded.Search, "search", tint = Color.White)
+                Icon(
+                    Icons.Rounded.Search,
+                    "searchIcon",
+                    tint = Color.White
+                )
             }
         },
         label = { Text(text = "Search", color = Color.White) },

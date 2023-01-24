@@ -20,7 +20,7 @@ fun SunriseSunsetRow(sunrise: String, sunset: String) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painterResource(R.drawable.sunrise),
-                contentDescription = null,
+                contentDescription = "sunriseIcon",
                 modifier = Modifier.size(25.dp)
             )
             Text(text = "Sunrise", color = Color.White)
@@ -32,7 +32,7 @@ fun SunriseSunsetRow(sunrise: String, sunset: String) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painterResource(R.drawable.sunset),
-                contentDescription = null,
+                contentDescription = "sunsetIcon",
                 modifier = Modifier.size(25.dp)
             )
             Text(text = "Sunset", color = Color.White)

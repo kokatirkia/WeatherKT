@@ -37,7 +37,7 @@ fun CurrentWeather(currentWeatherUi: CurrentWeatherUi) {
                     data = Constants.iconUrl + currentWeatherUi.weather[0].icon,
                     builder = { crossfade(true) }
                 ),
-                contentDescription = null,
+                contentDescription = "weatherIcon",
                 modifier = Modifier.size(50.dp)
             )
             Column {

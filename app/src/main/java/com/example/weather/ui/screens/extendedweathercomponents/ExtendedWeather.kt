@@ -11,10 +11,12 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.example.weather.ui.screens.commoncomponents.PHWRow
 import com.example.weather.ui.model.ExtendedWeatherUi
 import com.example.weather.ui.model.WeatherExtendedDataUi
+import com.example.weather.ui.screens.commoncomponents.PHWRow
 
 @ExperimentalAnimationApi
 @Composable
@@ -35,6 +37,7 @@ fun WeatherItem(weatherExtendedDataUi: WeatherExtendedDataUi) {
     var isExpanded by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
+            .semantics { contentDescription = "weatherItem" }
             .fillMaxSize()
             .background(
                 color = MaterialTheme.colors.primary,
@@ -49,7 +52,7 @@ fun WeatherItem(weatherExtendedDataUi: WeatherExtendedDataUi) {
         WeatherItemMainBox(weatherExtendedDataUi)
 
         AnimatedVisibility(visible = isExpanded) {
-            Column {
+            Column(modifier = Modifier.semantics { contentDescription = "expandableColumn" }) {
                 Divider(modifier = Modifier.padding(vertical = 10.dp))
                 PHWRow(
                     pressure = weatherExtendedDataUi.main.pressure,

@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.example.weather.ui.model.WeatherExtendedDataUi
@@ -19,6 +21,7 @@ import com.example.weather.utils.Constants
 fun WeatherItemMainBox(weatherExtendedDataUi: WeatherExtendedDataUi) {
     Box(
         modifier = Modifier
+            .semantics { contentDescription = "weatherItemMainBox" }
             .fillMaxSize()
             .size(75.dp)
             .padding(10.dp)

@@ -41,7 +41,7 @@ fun WeatherItemMainBox(weatherExtendedDataUi: WeatherExtendedDataUi) {
                 data = Constants.iconUrl + weatherExtendedDataUi.weather[0].icon,
                 builder = { crossfade(true) }
             ),
-            contentDescription = null,
+            contentDescription = "weatherIcon",
             modifier = Modifier
                 .padding(horizontal = 10.dp)
                 .size(35.dp)

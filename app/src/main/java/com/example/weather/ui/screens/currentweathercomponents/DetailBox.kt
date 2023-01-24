@@ -11,7 +11,7 @@ import com.example.weather.ui.screens.commoncomponents.PHWRow
 import com.example.weather.ui.model.CurrentWeatherUi
 
 @Composable
-fun DetailBox(currentWeatherState: CurrentWeatherUi) {
+fun DetailBox(currentWeatherUi: CurrentWeatherUi) {
     Box(
         modifier = Modifier
             .padding(10.dp)
@@ -25,14 +25,14 @@ fun DetailBox(currentWeatherState: CurrentWeatherUi) {
             modifier = Modifier.padding(20.dp)
         ) {
             SunriseSunsetRow(
-                currentWeatherState.sys.sunrise,
-                currentWeatherState.sys.sunset
+                currentWeatherUi.sys.sunrise,
+                currentWeatherUi.sys.sunset
             )
             Spacer(modifier = Modifier.padding(vertical = 15.dp))
             PHWRow(
-                currentWeatherState.main.pressure,
-                currentWeatherState.main.humidity,
-                currentWeatherState.wind.speed
+                currentWeatherUi.main.pressure,
+                currentWeatherUi.main.humidity,
+                currentWeatherUi.wind.speed
             )
         }
     }

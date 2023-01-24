@@ -22,6 +22,7 @@ import com.example.weather.ui.screens.commoncomponents.PHWRow
 @Composable
 fun ExtendedWeather(extendedWeatherUI: ExtendedWeatherUi) {
     LazyColumn(
+        modifier = Modifier.semantics { contentDescription = "extendedWeatherList" },
         contentPadding = PaddingValues(horizontal = 5.dp, vertical = 5.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {

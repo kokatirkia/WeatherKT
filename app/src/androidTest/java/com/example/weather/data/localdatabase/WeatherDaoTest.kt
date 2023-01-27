@@ -5,7 +5,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -38,7 +38,7 @@ class WeatherDaoTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun insertWeatherAndGetBack() = runBlockingTest {
+    fun insertWeatherAndGetBack() = runTest {
         val weatherEntity = WeatherEntityFactory.makeWeatherEntity()
         weatherDao.insertWeather(weatherEntity)
         val weatherFromDb = weatherDao.getWeather()
@@ -47,7 +47,7 @@ class WeatherDaoTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun insertWeatherReplacesOldWeatherOnPrimaryKeyConflict() = runBlockingTest {
+    fun insertWeatherReplacesOldWeatherOnPrimaryKeyConflict() = runTest {
         val weatherEntityFirst = WeatherEntityFactory.makeWeatherEntity()
         val weatherEntitySecond = WeatherEntityFactory.makeWeatherEntity()
         weatherDao.insertWeather(weatherEntityFirst)

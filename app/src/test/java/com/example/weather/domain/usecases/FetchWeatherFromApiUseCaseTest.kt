@@ -3,7 +3,7 @@ package com.example.weather.domain.usecases
 import com.example.weather.data.repository.WeatherFactory
 import com.example.weather.domain.repository.WeatherRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -35,7 +35,7 @@ class FetchWeatherFromApiUseCaseTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherFromApiUseCase should call repository fetchWeatherFromApi and then saveWeatherInLocalDatabase`() =
-        runBlockingTest {
+        runTest {
             val weatherDomain = WeatherFactory.makeWeather()
             whenever(weatherRepository.fetchWeatherFromApi(cityName)).thenReturn(weatherDomain)
             fetchWeatherFromApiUseCase.invoke(cityName)
@@ -49,7 +49,7 @@ class FetchWeatherFromApiUseCaseTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherFromApiUseCase when IOException is thrown should return NoInternetConnection`() =
-        runBlockingTest {
+        runTest {
             given(weatherRepository.fetchWeatherFromApi(cityName)).willAnswer { throw IOException() }
             val response = fetchWeatherFromApiUseCase.invoke(cityName)
 
@@ -59,7 +59,7 @@ class FetchWeatherFromApiUseCaseTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherFromApiUseCase when HttpException is thrown should return CityNotFound`() =
-        runBlockingTest {
+        runTest {
             given(weatherRepository.fetchWeatherFromApi(cityName)).willAnswer {
                 throw HttpException(
                     Response.error<ResponseBody>(
@@ -76,7 +76,7 @@ class FetchWeatherFromApiUseCaseTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherFromApiUseCase when Exception is thrown should return ErrorWhileFetching`() =
-        runBlockingTest {
+        runTest {
             given(weatherRepository.fetchWeatherFromApi(cityName)).willAnswer { throw Exception() }
             val response = fetchWeatherFromApiUseCase.invoke(cityName)
 

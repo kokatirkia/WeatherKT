@@ -3,7 +3,7 @@ package com.example.weather.domain.usecases
 import com.example.weather.data.repository.WeatherFactory
 import com.example.weather.domain.repository.WeatherRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -27,7 +27,7 @@ class FetchWeatherFromLocalSourceUseCaseTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherFromLocalSourceUseCase should call repository getWeatherFromLocalDatabase`() =
-        runBlockingTest {
+        runTest {
             val weatherDomain = WeatherFactory.makeWeather()
             whenever(weatherRepository.getWeatherFromLocalDatabase()).thenReturn(weatherDomain)
 

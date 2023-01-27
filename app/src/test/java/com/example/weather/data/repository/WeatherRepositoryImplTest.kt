@@ -10,7 +10,7 @@ import com.example.weather.data.repository.mapper.toWeatherDomain
 import com.example.weather.data.repository.mapper.toWeatherEntity
 import com.example.weather.domain.repository.WeatherRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -37,7 +37,7 @@ class WeatherRepositoryImplTest {
 
     @ExperimentalCoroutinesApi
     @Before
-    fun setup() = runBlockingTest {
+    fun setup() = runTest {
         currentWeatherApi = WeatherApiFactory.makeCurrentWeatherApi()
         extendedWeatherApi = WeatherApiFactory.makeExtendedWeatherApi()
         whenever(weatherApi.getCurrentWeather(any(), any(), any())).thenReturn(currentWeatherApi)
@@ -49,7 +49,7 @@ class WeatherRepositoryImplTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherFromApi when city name is not null or empty should call preferences saveCityName`() =
-        runBlockingTest {
+        runTest {
             weatherRepository.fetchWeatherFromApi(cityName)
             verify(weatherPreferences).saveCityName(cityName)
         }
@@ -57,7 +57,7 @@ class WeatherRepositoryImplTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherFromApi when city name is null should not call preferences saveCityName`() =
-        runBlockingTest {
+        runTest {
             weatherRepository.fetchWeatherFromApi(null)
             verify(weatherPreferences, never()).saveCityName(any())
         }
@@ -65,7 +65,7 @@ class WeatherRepositoryImplTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherFromApi when city name is empty should not call preferences saveCityName`() =
-        runBlockingTest {
+        runTest {
             val city = ""
             weatherRepository.fetchWeatherFromApi(city)
             verify(weatherPreferences, never()).saveCityName(city)
@@ -74,7 +74,7 @@ class WeatherRepositoryImplTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherFromApi when city name is null should call preferences getCityName()`() =
-        runBlockingTest {
+        runTest {
             weatherRepository.fetchWeatherFromApi(null)
             verify(weatherPreferences).getCityName()
         }
@@ -82,7 +82,7 @@ class WeatherRepositoryImplTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherFromApi when city name is empty should call preferences getCityName()`() =
-        runBlockingTest {
+        runTest {
             weatherRepository.fetchWeatherFromApi("")
             verify(weatherPreferences).getCityName()
         }
@@ -90,14 +90,14 @@ class WeatherRepositoryImplTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherFromApi when city name is not null or empty should not call preferences getCityName()`() =
-        runBlockingTest {
+        runTest {
             weatherRepository.fetchWeatherFromApi(cityName)
             verify(weatherPreferences, never()).getCityName()
         }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `fetchWeatherFromApi should call api methods`() = runBlockingTest {
+    fun `fetchWeatherFromApi should call api methods`() = runTest {
         weatherRepository.fetchWeatherFromApi(null)
         inOrder(weatherApi) {
             verify(weatherApi).getCurrentWeather(any(), any(), any())
@@ -107,7 +107,7 @@ class WeatherRepositoryImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `fetchWeatherFromApi should return weather mapped to domain`() = runBlockingTest {
+    fun `fetchWeatherFromApi should return weather mapped to domain`() = runTest {
         val weather = WeatherModelApi(currentWeatherApi, extendedWeatherApi).toWeatherDomain()
         val returnedWeather = weatherRepository.fetchWeatherFromApi(null)
         assertEquals(returnedWeather, weather)
@@ -116,7 +116,7 @@ class WeatherRepositoryImplTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `saveWeatherInLocalDatabase should map weather to entity and call weatherDao insertWeather`() =
-        runBlockingTest {
+        runTest {
             val weather = WeatherFactory.makeWeather()
             weatherRepository.saveWeatherInLocalDatabase(weather)
             verify(weatherDao).insertWeather(weather.toWeatherEntity())
@@ -124,14 +124,14 @@ class WeatherRepositoryImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getWeatherFromLocalDatabase should call weatherDao getWeather`() = runBlockingTest {
+    fun `getWeatherFromLocalDatabase should call weatherDao getWeather`() = runTest {
         weatherRepository.getWeatherFromLocalDatabase()
         verify(weatherDao).getWeather()
     }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getWeatherFromLocalDatabase should return weather mapped to domain`() = runBlockingTest {
+    fun `getWeatherFromLocalDatabase should return weather mapped to domain`() = runTest {
         val weatherEntity = WeatherEntityFactory.makeWeatherEntity()
         val weatherDomain = weatherEntity.toWeatherDomain()
 

@@ -14,7 +14,7 @@ import com.example.weather.data.repository.mapper.toWeatherDomain
 import com.example.weather.domain.usecases.FetchWeatherFromApiUseCase
 import com.example.weather.domain.usecases.FetchWeatherFromLocalSourceUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -32,7 +32,7 @@ class WeatherViewModelIntegrationTest {
 
     @ExperimentalCoroutinesApi
     @get:Rule
-    val coroutineRule = MainCoroutineRule()
+    val mainDispatcherRule = MainDispatcherRule()
 
     @Mock
     private lateinit var weatherApi: WeatherApi
@@ -59,7 +59,7 @@ class WeatherViewModelIntegrationTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun cityNameIsSavedInPreferences() = runBlockingTest {
+    fun cityNameIsSavedInPreferences() = runTest {
         val cityName = "London"
         weatherViewModel = WeatherViewModel(
             fetchWeatherFromApiUseCase,
@@ -72,7 +72,7 @@ class WeatherViewModelIntegrationTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun fetchWeatherDataSavesApiDataInLocalDatabase() = runBlockingTest() {
+    fun fetchWeatherDataSavesApiDataInLocalDatabase() = runTest {
         val currentWeatherApi = WeatherApiFactory.makeCurrentWeatherApi()
         val extendedWeatherApi = WeatherApiFactory.makeExtendedWeatherApi()
         whenever(weatherApi.getCurrentWeather(any(), any(), any())).thenReturn(currentWeatherApi)

@@ -9,10 +9,9 @@ import com.example.weather.domain.usecases.FetchWeatherFromLocalSourceUseCase
 import com.example.weather.ui.model.WeatherState
 import com.example.weather.ui.model.mapper.toWeatherUi
 import com.example.weather.ui.screens.WeatherTabScreen
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.pauseDispatcher
-import kotlinx.coroutines.test.resumeDispatcher
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.*
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -32,7 +31,7 @@ class WeatherViewModelTest {
 
     @ExperimentalCoroutinesApi
     @get:Rule
-    val coroutineRule = MainCoroutineRule()
+    val mainDispatcherRule = MainDispatcherRule()
 
     private lateinit var weatherViewModel: WeatherViewModel
 
@@ -65,16 +64,15 @@ class WeatherViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `cityNameTextFieldValue initial value should be empty string`() =
-        coroutineRule.runBlockingTest {
-            val textFieldValue = weatherViewModel.cityNameTextFieldValue.value
+    fun `cityNameTextFieldValue initial value should be empty string`() = runTest {
+        val textFieldValue = weatherViewModel.cityNameTextFieldValue.value
 
-            assertEquals(textFieldValue, "")
-        }
+        assertEquals(textFieldValue, "")
+    }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `onTextFieldValueChanged should change value`() = coroutineRule.runBlockingTest {
+    fun `onTextFieldValueChanged should change value`() = runTest {
         val newTextValue = "newCity"
         weatherViewModel.onTextFieldValueChanged(newTextValue)
 
@@ -83,7 +81,7 @@ class WeatherViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `selectedTabScreen initial value should be current`() = coroutineRule.runBlockingTest {
+    fun `selectedTabScreen initial value should be current`() = runTest {
         val tabScreen = weatherViewModel.selectedTabScreen.value
 
         assertEquals(tabScreen, WeatherTabScreen.Current)
@@ -91,7 +89,7 @@ class WeatherViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `onSelectedTabScreenChanged should change TabScreen`() = coroutineRule.runBlockingTest {
+    fun `onSelectedTabScreenChanged should change TabScreen`() = runTest {
         val weatherTabScreen = WeatherTabScreen.FiveDays
         weatherViewModel.onSelectedTabScreenChanged(weatherTabScreen)
 
@@ -101,33 +99,30 @@ class WeatherViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherData should change weatherState loading field value to true at start and to false at the end`() =
-        coroutineRule.runBlockingTest {
-            coroutineRule.pauseDispatcher()
+        runTest {
+            Dispatchers.setMain(StandardTestDispatcher())
 
             weatherViewModel.fetchWeatherData()
-
             assertTrue(weatherViewModel.weatherState.value?.loading ?: false)
 
-            coroutineRule.resumeDispatcher()
+            advanceUntilIdle()
 
             assertFalse(weatherViewModel.weatherState.value?.loading ?: true)
-
         }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `fetchWeatherData should return weather data from local source`() =
-        coroutineRule.runBlockingTest {
-            val weather = WeatherFactory.makeWeather()
-            whenever(fetchWeatherFromLocalSourceUseCase.invoke()).thenReturn(weather)
-            weatherViewModel.fetchWeatherData()
-            assertEquals(weatherViewModel.weatherState.value?.weatherUi, weather.toWeatherUi())
-        }
+    fun `fetchWeatherData should return weather data from local source`() = runTest {
+        val weather = WeatherFactory.makeWeather()
+        whenever(fetchWeatherFromLocalSourceUseCase.invoke()).thenReturn(weather)
+        weatherViewModel.fetchWeatherData()
+        assertEquals(weatherViewModel.weatherState.value?.weatherUi, weather.toWeatherUi())
+    }
 
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherData weatherState error message should not be null when fetchWeatherFromApiUseCase returns errorMessage`() =
-        coroutineRule.runBlockingTest {
+        runTest {
             whenever(fetchWeatherFromApiUseCase.invoke(anyString())).thenReturn(ErrorMessageEnum.ErrorWhileFetching)
             weatherViewModel.fetchWeatherData()
             assertEquals(

@@ -23,11 +23,9 @@ class CurrentWeatherTest {
         composeTestRule.onNodeWithText(testCurrentWeatherUi.main.temp).assertExists()
         composeTestRule.onNodeWithText(testCurrentWeatherUi.weather[0].description).assertExists()
         composeTestRule.onNodeWithText(testCurrentWeatherUi.main.feelsLike).assertExists()
+        composeTestRule.onNodeWithContentDescription("sunriseSunsetAnimation").assertExists()
         composeTestRule.onNodeWithText(testCurrentWeatherUi.sys.sunrise).assertExists()
         composeTestRule.onNodeWithText(testCurrentWeatherUi.sys.sunset).assertExists()
-        composeTestRule.onNodeWithText(testCurrentWeatherUi.main.pressure).assertExists()
-        composeTestRule.onNodeWithText(testCurrentWeatherUi.main.humidity).assertExists()
-        composeTestRule.onNodeWithText(testCurrentWeatherUi.wind.speed).assertExists()
     }
 }
 

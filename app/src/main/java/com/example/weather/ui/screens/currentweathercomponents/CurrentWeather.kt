@@ -69,6 +69,9 @@ fun CurrentWeather(currentWeatherUi: CurrentWeatherUi) {
             text = currentWeatherUi.main.feelsLike,
             color = Color.White
         )
-        DetailBox(currentWeatherUi)
+        SunriseSunset(
+            currentWeatherUi.sys.sunrise,
+            currentWeatherUi.sys.sunset
+        )
     }
 }

@@ -77,31 +77,34 @@ class WeatherApiTest {
     }
 
     @Test
-    fun `getCurrentWeather returns currentWeatherApi`(): Unit = runBlocking {
+    fun `getCurrentWeather returns currentWeatherResponse`(): Unit = runBlocking {
         mockWebServer.enqueue(
             MockResponse()
                 .setBody(WeatherApiJsonFactory.currentWeatherJson())
                 .setResponseCode(200)
         )
 
-        val currentWeatherApi = weatherApi.getCurrentWeather(
+        val currentWeatherResponse = weatherApi.getCurrentWeather(
             city,
             units,
             apiKey
         )
 
-        assertEquals(currentWeatherApi.name, WeatherApiJsonFactory.name)
-        assertEquals(currentWeatherApi.dt, WeatherApiJsonFactory.dt)
-        assertEquals(currentWeatherApi.main.temp, WeatherApiJsonFactory.temp)
-        assertEquals(currentWeatherApi.main.feelsLike, WeatherApiJsonFactory.feelsLike)
-        assertEquals(currentWeatherApi.main.pressure, WeatherApiJsonFactory.pressure)
-        assertEquals(currentWeatherApi.main.humidity, WeatherApiJsonFactory.humidity)
-        assertEquals(currentWeatherApi.wind.speed, WeatherApiJsonFactory.speed)
-        assertEquals(currentWeatherApi.sys.sunrise, WeatherApiJsonFactory.sunrise)
-        assertEquals(currentWeatherApi.sys.sunset, WeatherApiJsonFactory.sunset)
-        assertEquals(currentWeatherApi.weather[0].main, WeatherApiJsonFactory.main)
-        assertEquals(currentWeatherApi.weather[0].description, WeatherApiJsonFactory.description)
-        assertEquals(currentWeatherApi.weather[0].icon, WeatherApiJsonFactory.icon)
+        assertEquals(currentWeatherResponse.name, WeatherApiJsonFactory.name)
+        assertEquals(currentWeatherResponse.dt, WeatherApiJsonFactory.dt)
+        assertEquals(currentWeatherResponse.main.temp, WeatherApiJsonFactory.temp)
+        assertEquals(currentWeatherResponse.main.feelsLike, WeatherApiJsonFactory.feelsLike)
+        assertEquals(currentWeatherResponse.main.pressure, WeatherApiJsonFactory.pressure)
+        assertEquals(currentWeatherResponse.main.humidity, WeatherApiJsonFactory.humidity)
+        assertEquals(currentWeatherResponse.wind.speed, WeatherApiJsonFactory.speed)
+        assertEquals(currentWeatherResponse.sys.sunrise, WeatherApiJsonFactory.sunrise)
+        assertEquals(currentWeatherResponse.sys.sunset, WeatherApiJsonFactory.sunset)
+        assertEquals(currentWeatherResponse.weather[0].main, WeatherApiJsonFactory.main)
+        assertEquals(
+            currentWeatherResponse.weather[0].description,
+            WeatherApiJsonFactory.description
+        )
+        assertEquals(currentWeatherResponse.weather[0].icon, WeatherApiJsonFactory.icon)
     }
 
     @Test
@@ -142,28 +145,29 @@ class WeatherApiTest {
     }
 
     @Test
-    fun `getExtendedWeather returns extendedWeatherApi`(): Unit = runBlocking {
+    fun `getExtendedWeather returns extendedWeatherResponse`(): Unit = runBlocking {
         mockWebServer.enqueue(
             MockResponse()
                 .setBody(WeatherApiJsonFactory.extendedWeatherJson())
                 .setResponseCode(200)
         )
 
-        val extendedWeatherApi = weatherApi.getExtendedWeather(
+        val extendedWeatherResponse = weatherApi.getExtendedWeather(
             city,
             units,
             apiKey
         )
 
-        assertEquals(extendedWeatherApi.message, WeatherApiJsonFactory.message)
-        assertEquals(extendedWeatherApi.list[0].dt, WeatherApiJsonFactory.dt)
-        assertEquals(extendedWeatherApi.list[0].main.temp, WeatherApiJsonFactory.temp)
-        assertEquals(extendedWeatherApi.list[0].main.pressure, WeatherApiJsonFactory.pressure)
-        assertEquals(extendedWeatherApi.list[0].main.humidity, WeatherApiJsonFactory.humidity)
-        assertEquals(extendedWeatherApi.list[0].wind.speed, WeatherApiJsonFactory.speed)
-        assertEquals(extendedWeatherApi.list[0].weather[0].icon, WeatherApiJsonFactory.icon)
+        assertEquals(extendedWeatherResponse.message, WeatherApiJsonFactory.message)
+        assertEquals(extendedWeatherResponse.list[0].dt, WeatherApiJsonFactory.dt)
+        assertEquals(extendedWeatherResponse.list[0].main.temp, WeatherApiJsonFactory.temp)
+        assertEquals(extendedWeatherResponse.list[0].main.pressure, WeatherApiJsonFactory.pressure)
+        assertEquals(extendedWeatherResponse.list[0].main.humidity, WeatherApiJsonFactory.humidity)
+        assertEquals(extendedWeatherResponse.list[0].wind.speed, WeatherApiJsonFactory.speed)
+        assertEquals(extendedWeatherResponse.list[0].weather[0].icon, WeatherApiJsonFactory.icon)
         assertEquals(
-            extendedWeatherApi.list[0].weather[0].description, WeatherApiJsonFactory.description
+            extendedWeatherResponse.list[0].weather[0].description,
+            WeatherApiJsonFactory.description
         )
     }
 }

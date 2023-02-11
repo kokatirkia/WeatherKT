@@ -1,7 +1,7 @@
 package com.example.weather.data.networking
 
-import com.example.weather.data.networking.model.CurrentWeatherApi
-import com.example.weather.data.networking.model.ExtendedWeatherApi
+import com.example.weather.data.networking.model.CurrentWeatherResponse
+import com.example.weather.data.networking.model.ExtendedWeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -11,12 +11,12 @@ interface WeatherApi {
         @Query("q") city: String,
         @Query("units") unit: String,
         @Query("appid") apiid: String
-    ): CurrentWeatherApi
+    ): CurrentWeatherResponse
 
     @GET("forecast")
     suspend fun getExtendedWeather(
         @Query("q") city: String,
         @Query("units") unit: String,
         @Query("appid") appid: String
-    ): ExtendedWeatherApi
+    ): ExtendedWeatherResponse
 }

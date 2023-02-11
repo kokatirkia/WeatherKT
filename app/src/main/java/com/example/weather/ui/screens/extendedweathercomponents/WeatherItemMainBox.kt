@@ -14,11 +14,11 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import com.example.weather.ui.model.WeatherExtendedDataUi
+import com.example.weather.ui.model.ExtendedWeatherUi
 import com.example.weather.utils.Constants
 
 @Composable
-fun WeatherItemMainBox(weatherExtendedDataUi: WeatherExtendedDataUi) {
+fun WeatherItemMainBox(weatherItem: ExtendedWeatherUi.WeatherItem) {
     Box(
         modifier = Modifier
             .semantics { contentDescription = "weatherItemMainBox" }
@@ -27,18 +27,18 @@ fun WeatherItemMainBox(weatherExtendedDataUi: WeatherExtendedDataUi) {
             .padding(10.dp)
     ) {
         Text(
-            text = weatherExtendedDataUi.dt,
+            text = weatherItem.dt,
             color = Color.White,
             modifier = Modifier.align(Alignment.TopStart)
         )
         Text(
-            text = weatherExtendedDataUi.weather[0].description,
+            text = weatherItem.weather[0].description,
             color = Color.White,
             modifier = Modifier.align(Alignment.BottomStart)
         )
         Image(
             painter = rememberImagePainter(
-                data = Constants.iconUrl + weatherExtendedDataUi.weather[0].icon,
+                data = Constants.iconUrl + weatherItem.weather[0].icon,
                 builder = { crossfade(true) }
             ),
             contentDescription = "weatherIcon",
@@ -48,7 +48,7 @@ fun WeatherItemMainBox(weatherExtendedDataUi: WeatherExtendedDataUi) {
                 .align(Alignment.TopEnd)
         )
         Text(
-            text = weatherExtendedDataUi.main.temp,
+            text = weatherItem.main.temp,
             color = Color.White,
             modifier = Modifier.align(Alignment.BottomEnd)
         )

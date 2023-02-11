@@ -1,25 +1,27 @@
 package com.example.weather.data.repository.mapper
 
-import com.example.weather.data.networking.model.WeatherModelApi
-import com.example.weather.domain.model.*
+import com.example.weather.data.networking.model.WeatherResponse
+import com.example.weather.domain.model.CurrentWeather
+import com.example.weather.domain.model.ExtendedWeather
+import com.example.weather.domain.model.Weather
 
-fun WeatherModelApi.toWeatherDomain() = Weather(
+fun WeatherResponse.toWeatherDomain() = Weather(
     currentWeather = CurrentWeather(
-        weatherDescription = currentWeatherApi.weather.map {
-            WeatherDescription(
+        weather = currentWeatherApi.weather.map {
+            CurrentWeather.Weather(
                 main = it.main,
                 description = it.description,
                 icon = it.icon
             )
         },
-        main = Main(
+        main = CurrentWeather.Main(
             temp = currentWeatherApi.main.temp,
             feelsLike = currentWeatherApi.main.feelsLike,
             pressure = currentWeatherApi.main.pressure,
             humidity = currentWeatherApi.main.humidity
         ),
-        wind = Wind(speed = currentWeatherApi.wind.speed),
-        sys = Sys(
+        wind = CurrentWeather.Wind(speed = currentWeatherApi.wind.speed),
+        sys = CurrentWeather.Sys(
             sunrise = currentWeatherApi.sys.sunrise,
             sunset = currentWeatherApi.sys.sunset
         ),
@@ -28,21 +30,21 @@ fun WeatherModelApi.toWeatherDomain() = Weather(
     ),
     extendedWeather = ExtendedWeather(
         list = extendedWeatherApi.list.map {
-            WeatherExtendedData(
+            ExtendedWeather.WeatherItem(
                 dt = it.dt,
-                main = MainExtended(
+                main = ExtendedWeather.Main(
                     temp = it.main.temp,
                     pressure = it.main.pressure,
                     humidity = it.main.humidity
                 ),
                 dtTxt = it.dtTxt,
                 weather = it.weather.map { description ->
-                    DescriptionExtended(
+                    ExtendedWeather.Weather(
                         description = description.description,
                         icon = description.icon
                     )
                 },
-                wind = WindExtended(speed = it.wind.speed)
+                wind = ExtendedWeather.Wind(speed = it.wind.speed)
             )
         }
     )

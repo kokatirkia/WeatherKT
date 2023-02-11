@@ -30,15 +30,15 @@ class CurrentWeatherTest {
 }
 
 val testCurrentWeatherUi = CurrentWeatherUi(
-    listOf(WeatherDescriptionUi("clouds", "scattered clouds", "")),
-    MainUi(
+    listOf(CurrentWeatherUi.Weather("clouds", "scattered clouds", "")),
+    CurrentWeatherUi.Main(
         "10 °C",
         "11 °C",
         "1000 mBar",
         "25 %"
     ),
-    WindUi("15 km/h"),
-    SysUi("6:00", "7:00"),
+    CurrentWeatherUi.Wind("15 km/h"),
+    CurrentWeatherUi.Sys("6:00", "7:00"),
     "EEEE",
     "hh:mm a",
     "London"

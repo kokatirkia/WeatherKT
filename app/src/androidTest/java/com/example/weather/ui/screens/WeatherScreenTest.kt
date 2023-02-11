@@ -91,15 +91,15 @@ class WeatherScreenTest {
 }
 
 val testCurrentWeatherUi = CurrentWeatherUi(
-    listOf(WeatherDescriptionUi("clouds", "scattered clouds", "")),
-    MainUi(
+    listOf(CurrentWeatherUi.Weather("clouds", "scattered clouds", "")),
+    CurrentWeatherUi.Main(
         "10 °C",
         "11 °C",
         "1000 mBar",
         "25 %"
     ),
-    WindUi("15 km/h"),
-    SysUi("6:00", "7:00"),
+    CurrentWeatherUi.Wind("15 km/h"),
+    CurrentWeatherUi.Sys("6:00", "7:00"),
     "EEEE",
     "hh:mm a",
     "London"
@@ -107,12 +107,12 @@ val testCurrentWeatherUi = CurrentWeatherUi(
 
 val testExtendedWeatherUi = ExtendedWeatherUi(
     listOf(
-        WeatherExtendedDataUi(
+        ExtendedWeatherUi.WeatherItem(
             "EEE, d MMM HH:mm a",
-            MainExtendedUi("10 °C", "1000 mBar", "25%"),
+            ExtendedWeatherUi.Main("10 °C", "1000 mBar", "25%"),
             "2023-01-24 15:00:00",
-            listOf(DescriptionExtendedUi("clouds", "")),
-            WindExtendedUi("15 km/h")
+            listOf(ExtendedWeatherUi.Weather("clouds", "")),
+            ExtendedWeatherUi.Wind("15 km/h")
         )
     )
 )

@@ -1,48 +1,50 @@
 package com.example.weather.data.repository.mapper
 
 import com.example.weather.data.localdatabase.model.WeatherEntity
-import com.example.weather.domain.model.*
+import com.example.weather.domain.model.CurrentWeather
+import com.example.weather.domain.model.ExtendedWeather
+import com.example.weather.domain.model.Weather
 
 fun WeatherEntity.toWeatherDomain() = Weather(
     currentWeather = CurrentWeather(
-        weatherDescription = currentWeather.weatherDescriptionEntity.map {
-            WeatherDescription(
+        weather = currentWeather.weather.map {
+            CurrentWeather.Weather(
                 main = it.main,
                 description = it.description,
                 icon = it.icon
             )
         },
-        main = Main(
-            temp = currentWeather.mainEntity.temp,
-            feelsLike = currentWeather.mainEntity.feels_like,
-            pressure = currentWeather.mainEntity.pressure,
-            humidity = currentWeather.mainEntity.humidity
+        main = CurrentWeather.Main(
+            temp = currentWeather.main.temp,
+            feelsLike = currentWeather.main.feels_like,
+            pressure = currentWeather.main.pressure,
+            humidity = currentWeather.main.humidity
         ),
-        wind = Wind(currentWeather.windEntity.speed),
-        sys = Sys(
-            sunrise = currentWeather.sysEntity.sunrise,
-            sunset = currentWeather.sysEntity.sunset
+        wind = CurrentWeather.Wind(currentWeather.wind.speed),
+        sys = CurrentWeather.Sys(
+            sunrise = currentWeather.sys.sunrise,
+            sunset = currentWeather.sys.sunset
         ),
         dt = currentWeather.dt,
         name = currentWeather.name
     ),
     extendedWeather = ExtendedWeather(
         list = extendedWeather.list.map {
-            WeatherExtendedData(
+            ExtendedWeather.WeatherItem(
                 dt = it.dt,
-                main = MainExtended(
-                    temp = it.mainEntity.temp,
-                    pressure = it.mainEntity.pressure,
-                    humidity = it.mainEntity.humidity
+                main = ExtendedWeather.Main(
+                    temp = it.main.temp,
+                    pressure = it.main.pressure,
+                    humidity = it.main.humidity
                 ),
-                dtTxt = it.dt_txt,
+                dtTxt = it.dtTxt,
                 weather = it.weather.map { description ->
-                    DescriptionExtended(
+                    ExtendedWeather.Weather(
                         description = description.description,
                         icon = description.icon
                     )
                 },
-                wind = WindExtended(it.windEntity.speed)
+                wind = ExtendedWeather.Wind(it.wind.speed)
             )
         }
     )

@@ -1,6 +1,7 @@
 package com.example.weather.data.repository
 
-import com.example.weather.data.networking.model.*
+import com.example.weather.data.networking.model.CurrentWeatherResponse
+import com.example.weather.data.networking.model.ExtendedWeatherResponse
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
@@ -16,24 +17,35 @@ object WeatherApiFactory {
     private fun makeRandomLong() =
         ThreadLocalRandom.current().nextLong(0L, 1000L + 1L)
 
-    fun makeCurrentWeatherApi() = CurrentWeatherApi(
-        listOf(CurrentWeatherDataApi(makeRandomString(), makeRandomString(), makeRandomString())),
-        MainApi(makeRandomDouble(), makeRandomString(), makeRandomInt(), makeRandomInt()),
-        WindApi(makeRandomDouble()),
-        SysApi(makeRandomLong(), makeRandomLong()),
+    fun makeCurrentWeatherResponse() = CurrentWeatherResponse(
+        listOf(
+            CurrentWeatherResponse.Weather(
+                makeRandomString(),
+                makeRandomString(),
+                makeRandomString()
+            )
+        ),
+        CurrentWeatherResponse.Main(
+            makeRandomDouble(),
+            makeRandomString(),
+            makeRandomInt(),
+            makeRandomInt()
+        ),
+        CurrentWeatherResponse.Wind(makeRandomDouble()),
+        CurrentWeatherResponse.Sys(makeRandomLong(), makeRandomLong()),
         makeRandomLong(),
         makeRandomString()
     )
 
-    fun makeExtendedWeatherApi() = ExtendedWeatherApi(
+    fun makeExtendedWeatherApi() = ExtendedWeatherResponse(
         makeRandomDouble(),
         listOf(
-            WeatherDataApi(
+            ExtendedWeatherResponse.WeatherItem(
                 makeRandomLong(),
-                MainExtendedApi(makeRandomDouble(), makeRandomInt(), makeRandomInt()),
+                ExtendedWeatherResponse.Main(makeRandomDouble(), makeRandomInt(), makeRandomInt()),
                 makeRandomString(),
-                listOf(DescriptionExtendedApi(makeRandomString(), makeRandomString())),
-                WindExtendedApi(makeRandomDouble())
+                listOf(ExtendedWeatherResponse.Weather(makeRandomString(), makeRandomString())),
+                ExtendedWeatherResponse.Wind(makeRandomDouble())
             )
         )
     )

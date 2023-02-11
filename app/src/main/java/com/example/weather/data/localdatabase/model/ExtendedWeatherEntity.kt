@@ -1,26 +1,26 @@
 package com.example.weather.data.localdatabase.model
 
 data class ExtendedWeatherEntity(
-    val list: List<WeatherExtendedDataEntity>
-)
+    val list: List<WeatherItem>
+) {
+    data class WeatherItem(
+        val dt: Long,
+        val main: Main,
+        val dtTxt: String,
+        val weather: List<Weather>,
+        val wind: Wind
+    )
 
-data class WeatherExtendedDataEntity(
-    val dt: Long,
-    val mainEntity: MainExtendedEntity,
-    val dt_txt: String,
-    val weather: List<DescriptionExtendedEntity>,
-    val windEntity: WindExtendedEntity
-)
+    data class Main(
+        val temp: Double,
+        val pressure: Int,
+        val humidity: Int
+    )
 
-data class WindExtendedEntity(val speed: Double)
+    data class Weather(
+        val description: String,
+        val icon: String
+    )
 
-data class DescriptionExtendedEntity(
-    val description: String,
-    val icon: String
-)
-
-data class MainExtendedEntity(
-    val temp: Double,
-    val pressure: Int,
-    val humidity: Int
-)
+    data class Wind(val speed: Double)
+}

@@ -1,27 +1,27 @@
 package com.example.weather.ui.model
 
 data class ExtendedWeatherUi(
-    val list: List<WeatherExtendedDataUi>
-)
+    val list: List<WeatherItem>
+) {
+    data class WeatherItem(
+        val dt: String,
+        val main: Main,
+        val dtTxt: String,
+        val weather: List<Weather>,
+        val wind: Wind,
+    )
 
-data class WeatherExtendedDataUi(
-    val dt: String,
-    val main: MainExtendedUi,
-    val dtTxt: String,
-    val weather: List<DescriptionExtendedUi>,
-    val wind: WindExtendedUi,
-    var isExpanded: Boolean = false
-)
+    data class Main(
+        val temp: String,
+        val pressure: String,
+        val humidity: String
+    )
 
-data class WindExtendedUi(val speed: String)
+    data class Weather(
+        val description: String,
+        val icon: String
+    )
 
-data class DescriptionExtendedUi(
-    val description: String,
-    val icon: String
-)
+    data class Wind(val speed: String)
+}
 
-data class MainExtendedUi(
-    val temp: String,
-    val pressure: String,
-    val humidity: String
-)

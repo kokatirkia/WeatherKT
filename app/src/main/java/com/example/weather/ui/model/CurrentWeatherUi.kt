@@ -1,31 +1,31 @@
 package com.example.weather.ui.model
 
 data class CurrentWeatherUi(
-    val weather: List<WeatherDescriptionUi>,
-    val main: MainUi,
-    val wind: WindUi,
-    val sys: SysUi,
+    val weather: List<Weather>,
+    val main: Main,
+    val wind: Wind,
+    val sys: Sys,
     val day: String,
     val time: String,
     var name: String
-)
+) {
+    data class Weather(
+        val main: String,
+        var description: String,
+        val icon: String
+    )
 
-data class WeatherDescriptionUi(
-    val main: String,
-    var description: String,
-    val icon: String
-)
+    data class Main(
+        var temp: String,
+        var feelsLike: String,
+        var pressure: String,
+        var humidity: String
+    )
 
-data class MainUi(
-    var temp: String,
-    var feelsLike: String,
-    var pressure: String,
-    var humidity: String
-)
+    data class Wind(var speed: String)
 
-data class WindUi(var speed: String)
-
-data class SysUi(
-    var sunrise: String,
-    var sunset: String
-)
+    data class Sys(
+        var sunrise: String,
+        var sunset: String
+    )
+}

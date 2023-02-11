@@ -1,6 +1,8 @@
 package com.example.weather.data.localdatabase
 
-import com.example.weather.data.localdatabase.model.*
+import com.example.weather.data.localdatabase.model.CurrentWeatherEntity
+import com.example.weather.data.localdatabase.model.ExtendedWeatherEntity
+import com.example.weather.data.localdatabase.model.WeatherEntity
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
@@ -21,26 +23,35 @@ object WeatherEntityFactory {
         id = 1,
         currentWeather = CurrentWeatherEntity(
             listOf(
-                WeatherDescriptionEntity(
+                CurrentWeatherEntity.Weather(
                     makeRandomString(),
                     makeRandomString(),
                     makeRandomString()
                 )
             ),
-            MainEntity(makeRandomDouble(), makeRandomString(), makeRandomInt(), makeRandomInt()),
-            WindEntity(makeRandomDouble()),
-            SysEntity(makeRandomLong(), makeRandomLong()),
+            CurrentWeatherEntity.Main(
+                makeRandomDouble(),
+                makeRandomString(),
+                makeRandomInt(),
+                makeRandomInt()
+            ),
+            CurrentWeatherEntity.Wind(makeRandomDouble()),
+            CurrentWeatherEntity.Sys(makeRandomLong(), makeRandomLong()),
             makeRandomLong(),
             makeRandomString()
         ),
         extendedWeather = ExtendedWeatherEntity(
             listOf(
-                WeatherExtendedDataEntity(
+                ExtendedWeatherEntity.WeatherItem(
                     makeRandomLong(),
-                    MainExtendedEntity(makeRandomDouble(), makeRandomInt(), makeRandomInt()),
+                    ExtendedWeatherEntity.Main(
+                        makeRandomDouble(),
+                        makeRandomInt(),
+                        makeRandomInt()
+                    ),
                     makeRandomString(),
-                    listOf(DescriptionExtendedEntity(makeRandomString(), makeRandomString())),
-                    WindExtendedEntity(makeRandomDouble())
+                    listOf(ExtendedWeatherEntity.Weather(makeRandomString(), makeRandomString())),
+                    ExtendedWeatherEntity.Wind(makeRandomDouble())
                 )
             )
         )

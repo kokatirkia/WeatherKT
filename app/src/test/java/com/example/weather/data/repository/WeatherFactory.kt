@@ -1,6 +1,8 @@
 package com.example.weather.data.repository
 
-import com.example.weather.domain.model.*
+import com.example.weather.domain.model.CurrentWeather
+import com.example.weather.domain.model.ExtendedWeather
+import com.example.weather.domain.model.Weather
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
@@ -18,21 +20,32 @@ object WeatherFactory {
 
     fun makeWeather() = Weather(
         currentWeather = CurrentWeather(
-            listOf(WeatherDescription(makeRandomString(), makeRandomString(), makeRandomString())),
-            Main(makeRandomDouble(), makeRandomString(), makeRandomInt(), makeRandomInt()),
-            Wind(makeRandomDouble()),
-            Sys(makeRandomLong(), makeRandomLong()),
+            listOf(
+                CurrentWeather.Weather(
+                    makeRandomString(),
+                    makeRandomString(),
+                    makeRandomString()
+                )
+            ),
+            CurrentWeather.Main(
+                makeRandomDouble(),
+                makeRandomString(),
+                makeRandomInt(),
+                makeRandomInt()
+            ),
+            CurrentWeather.Wind(makeRandomDouble()),
+            CurrentWeather.Sys(makeRandomLong(), makeRandomLong()),
             makeRandomLong(),
             makeRandomString()
         ),
         extendedWeather = ExtendedWeather(
             listOf(
-                WeatherExtendedData(
+                ExtendedWeather.WeatherItem(
                     makeRandomLong(),
-                    MainExtended(makeRandomDouble(), makeRandomInt(), makeRandomInt()),
+                    ExtendedWeather.Main(makeRandomDouble(), makeRandomInt(), makeRandomInt()),
                     makeRandomString(),
-                    listOf(DescriptionExtended(makeRandomString(), makeRandomString())),
-                    WindExtended(makeRandomDouble())
+                    listOf(ExtendedWeather.Weather(makeRandomString(), makeRandomString())),
+                    ExtendedWeather.Wind(makeRandomDouble())
                 )
             )
         )

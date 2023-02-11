@@ -1,26 +1,32 @@
 package com.example.weather.domain.model
 
 data class ExtendedWeather(
-    val list: List<WeatherExtendedData>
-)
+    val list: List<WeatherItem>
+){
+    data class WeatherItem(
+        val dt: Long,
+        val main: Main,
+        val dtTxt: String,
+        val weather: List<Weather>,
+        val wind: Wind
+    )
 
-data class WeatherExtendedData(
-    val dt: Long,
-    val main: MainExtended,
-    val dtTxt: String,
-    val weather: List<DescriptionExtended>,
-    val wind: WindExtended
-)
+    data class Main(
+        val temp: Double,
+        val pressure: Int,
+        val humidity: Int
+    )
 
-data class WindExtended(val speed: Double)
+    data class Weather(
+        val description: String,
+        val icon: String
+    )
 
-data class DescriptionExtended(
-    val description: String,
-    val icon: String
-)
+    data class Wind(val speed: Double)
 
-data class MainExtended(
-    val temp: Double,
-    val pressure: Int,
-    val humidity: Int
-)
+}
+
+
+
+
+

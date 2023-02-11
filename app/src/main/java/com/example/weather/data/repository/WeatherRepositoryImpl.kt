@@ -3,7 +3,7 @@ package com.example.weather.data.repository
 import com.example.weather.data.localdatabase.WeatherDao
 import com.example.weather.data.localdatabase.preferences.WeatherPreferences
 import com.example.weather.data.networking.WeatherApi
-import com.example.weather.data.networking.model.WeatherModelApi
+import com.example.weather.data.networking.model.WeatherResponse
 import com.example.weather.data.repository.mapper.toWeatherDomain
 import com.example.weather.data.repository.mapper.toWeatherEntity
 import com.example.weather.domain.model.Weather
@@ -38,7 +38,7 @@ class WeatherRepositoryImpl @Inject constructor(
             Constants.ApiKey
         )
 
-        return WeatherModelApi(apiCurrentWeather, apiExtendedWeather).toWeatherDomain()
+        return WeatherResponse(apiCurrentWeather, apiExtendedWeather).toWeatherDomain()
     }
 
     override suspend fun saveWeatherInLocalDatabase(weather: Weather) {

@@ -15,7 +15,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.example.weather.ui.model.ExtendedWeatherUi
-import com.example.weather.ui.model.WeatherExtendedDataUi
 
 @ExperimentalAnimationApi
 @Composable
@@ -26,14 +25,14 @@ fun ExtendedWeather(extendedWeatherUI: ExtendedWeatherUi) {
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         extendedWeatherUI.list.forEach {
-            item { WeatherItem(weatherExtendedDataUi = it) }
+            item { WeatherItem(weatherItem = it) }
         }
     }
 }
 
 @ExperimentalAnimationApi
 @Composable
-fun WeatherItem(weatherExtendedDataUi: WeatherExtendedDataUi) {
+fun WeatherItem(weatherItem: ExtendedWeatherUi.WeatherItem) {
     var isExpanded by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
@@ -49,15 +48,15 @@ fun WeatherItem(weatherExtendedDataUi: WeatherExtendedDataUi) {
             .padding(5.dp)
     ) {
 
-        WeatherItemMainBox(weatherExtendedDataUi)
+        WeatherItemMainBox(weatherItem)
 
         AnimatedVisibility(visible = isExpanded) {
             Column(modifier = Modifier.semantics { contentDescription = "expandableColumn" }) {
                 Divider(modifier = Modifier.padding(vertical = 10.dp))
                 PHWRow(
-                    pressure = weatherExtendedDataUi.main.pressure,
-                    humidity = weatherExtendedDataUi.main.humidity,
-                    windSpeed = weatherExtendedDataUi.wind.speed
+                    pressure = weatherItem.main.pressure,
+                    humidity = weatherItem.main.humidity,
+                    windSpeed = weatherItem.wind.speed
                 )
             }
         }

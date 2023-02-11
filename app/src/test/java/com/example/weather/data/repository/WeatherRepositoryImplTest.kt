@@ -3,9 +3,9 @@ package com.example.weather.data.repository
 import com.example.weather.data.localdatabase.WeatherDao
 import com.example.weather.data.localdatabase.preferences.WeatherPreferences
 import com.example.weather.data.networking.WeatherApi
-import com.example.weather.data.networking.model.CurrentWeatherApi
-import com.example.weather.data.networking.model.ExtendedWeatherApi
-import com.example.weather.data.networking.model.WeatherModelApi
+import com.example.weather.data.networking.model.CurrentWeatherResponse
+import com.example.weather.data.networking.model.ExtendedWeatherResponse
+import com.example.weather.data.networking.model.WeatherResponse
 import com.example.weather.data.repository.mapper.toWeatherDomain
 import com.example.weather.data.repository.mapper.toWeatherEntity
 import com.example.weather.domain.repository.WeatherRepository
@@ -22,8 +22,8 @@ import org.mockito.kotlin.*
 @RunWith(MockitoJUnitRunner::class)
 class WeatherRepositoryImplTest {
     private lateinit var weatherRepository: WeatherRepository
-    private lateinit var currentWeatherApi: CurrentWeatherApi
-    private lateinit var extendedWeatherApi: ExtendedWeatherApi
+    private lateinit var currentWeatherResponse: CurrentWeatherResponse
+    private lateinit var extendedWeatherResponse: ExtendedWeatherResponse
     private val cityName = "Tbilisi"
 
     @Mock
@@ -38,10 +38,14 @@ class WeatherRepositoryImplTest {
     @ExperimentalCoroutinesApi
     @Before
     fun setup() = runTest {
-        currentWeatherApi = WeatherApiFactory.makeCurrentWeatherApi()
-        extendedWeatherApi = WeatherApiFactory.makeExtendedWeatherApi()
-        whenever(weatherApi.getCurrentWeather(any(), any(), any())).thenReturn(currentWeatherApi)
-        whenever(weatherApi.getExtendedWeather(any(), any(), any())).thenReturn(extendedWeatherApi)
+        currentWeatherResponse = WeatherApiFactory.makeCurrentWeatherResponse()
+        extendedWeatherResponse = WeatherApiFactory.makeExtendedWeatherApi()
+        whenever(weatherApi.getCurrentWeather(any(), any(), any())).thenReturn(
+            currentWeatherResponse
+        )
+        whenever(weatherApi.getExtendedWeather(any(), any(), any())).thenReturn(
+            extendedWeatherResponse
+        )
         whenever(weatherPreferences.getCityName()).thenReturn(cityName)
         weatherRepository = WeatherRepositoryImpl(weatherDao, weatherApi, weatherPreferences)
     }
@@ -108,7 +112,8 @@ class WeatherRepositoryImplTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `fetchWeatherFromApi should return weather mapped to domain`() = runTest {
-        val weather = WeatherModelApi(currentWeatherApi, extendedWeatherApi).toWeatherDomain()
+        val weather =
+            WeatherResponse(currentWeatherResponse, extendedWeatherResponse).toWeatherDomain()
         val returnedWeather = weatherRepository.fetchWeatherFromApi(null)
         assertEquals(returnedWeather, weather)
     }

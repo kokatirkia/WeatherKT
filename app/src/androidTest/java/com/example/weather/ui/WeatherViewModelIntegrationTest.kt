@@ -8,7 +8,7 @@ import com.example.weather.data.localdatabase.WeatherDao
 import com.example.weather.data.localdatabase.WeatherDb
 import com.example.weather.data.localdatabase.preferences.WeatherPreferencesImpl
 import com.example.weather.data.networking.WeatherApi
-import com.example.weather.data.networking.model.WeatherModelApi
+import com.example.weather.data.networking.model.WeatherResponse
 import com.example.weather.data.repository.WeatherRepositoryImpl
 import com.example.weather.data.repository.mapper.toWeatherDomain
 import com.example.weather.domain.usecases.FetchWeatherFromApiUseCase
@@ -73,9 +73,9 @@ class WeatherViewModelIntegrationTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun fetchWeatherDataSavesApiDataInLocalDatabase() = runTest {
-        val currentWeatherApi = WeatherApiFactory.makeCurrentWeatherApi()
+        val currentWeatherResponse = WeatherApiFactory.makeCurrentWeatherResponse()
         val extendedWeatherApi = WeatherApiFactory.makeExtendedWeatherApi()
-        whenever(weatherApi.getCurrentWeather(any(), any(), any())).thenReturn(currentWeatherApi)
+        whenever(weatherApi.getCurrentWeather(any(), any(), any())).thenReturn(currentWeatherResponse)
         whenever(weatherApi.getExtendedWeather(any(), any(), any())).thenReturn(extendedWeatherApi)
         weatherViewModel = WeatherViewModel(
             fetchWeatherFromApiUseCase,
@@ -84,7 +84,7 @@ class WeatherViewModelIntegrationTest {
         weatherViewModel.fetchWeatherData()
         assertEquals(
             weatherDao.getWeather()?.toWeatherDomain(),
-            WeatherModelApi(currentWeatherApi, extendedWeatherApi).toWeatherDomain()
+            WeatherResponse(currentWeatherResponse, extendedWeatherApi).toWeatherDomain()
         )
     }
 }

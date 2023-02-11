@@ -74,9 +74,9 @@ class WeatherViewModelIntegrationTest {
     @Test
     fun fetchWeatherDataSavesApiDataInLocalDatabase() = runTest {
         val currentWeatherResponse = WeatherApiFactory.makeCurrentWeatherResponse()
-        val extendedWeatherApi = WeatherApiFactory.makeExtendedWeatherApi()
+        val extendedWeatherResponse = WeatherApiFactory.makeExtendedWeatherApi()
         whenever(weatherApi.getCurrentWeather(any(), any(), any())).thenReturn(currentWeatherResponse)
-        whenever(weatherApi.getExtendedWeather(any(), any(), any())).thenReturn(extendedWeatherApi)
+        whenever(weatherApi.getExtendedWeather(any(), any(), any())).thenReturn(extendedWeatherResponse)
         weatherViewModel = WeatherViewModel(
             fetchWeatherFromApiUseCase,
             fetchWeatherFromLocalSourceUseCase
@@ -84,7 +84,7 @@ class WeatherViewModelIntegrationTest {
         weatherViewModel.fetchWeatherData()
         assertEquals(
             weatherDao.getWeather()?.toWeatherDomain(),
-            WeatherResponse(currentWeatherResponse, extendedWeatherApi).toWeatherDomain()
+            WeatherResponse(currentWeatherResponse, extendedWeatherResponse).toWeatherDomain()
         )
     }
 }

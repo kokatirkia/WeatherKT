@@ -16,7 +16,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.example.weather.ui.model.ExtendedWeatherUi
 import com.example.weather.ui.model.WeatherExtendedDataUi
-import com.example.weather.ui.screens.commoncomponents.PHWRow
 
 @ExperimentalAnimationApi
 @Composable

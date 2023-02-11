@@ -1,11 +1,8 @@
 package com.example.weather.ui.screens.extendedweathercomponents
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.ui.test.assertHasClickAction
-import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.performClick
 import com.example.weather.ui.model.DescriptionExtendedUi
 import com.example.weather.ui.model.MainExtendedUi
 import com.example.weather.ui.model.WeatherExtendedDataUi
@@ -19,22 +16,25 @@ class ExtendedWeatherTest {
 
     @OptIn(ExperimentalAnimationApi::class)
     @Test
-    fun onClickCausesExpand() {
+    fun onClickCausesExpandAndShowsRequiredFields() {
         composeTestRule.setContent {
             WeatherItem(weatherExtendedDataUi = testWeatherExtendedDataUi)
         }
         composeTestRule.onNodeWithContentDescription("weatherItem").assertHasClickAction()
         composeTestRule.onNodeWithContentDescription("weatherItem").performClick()
         composeTestRule.onNodeWithContentDescription("expandableColumn").assertIsDisplayed()
-    }
 
-    @OptIn(ExperimentalAnimationApi::class)
-    @Test
-    fun weatherItemMainBoxExists() {
-        composeTestRule.setContent {
-            WeatherItem(weatherExtendedDataUi = testWeatherExtendedDataUi)
-        }
-        composeTestRule.onNodeWithContentDescription("weatherItemMainBox").assertExists()
+        composeTestRule.onNodeWithText(testWeatherExtendedDataUi.dt).assertExists()
+        composeTestRule.onNodeWithText(testWeatherExtendedDataUi.weather[0].description)
+            .assertExists()
+        composeTestRule.onNodeWithContentDescription("weatherIcon").assertExists()
+        composeTestRule.onNodeWithText(testWeatherExtendedDataUi.main.temp).assertExists()
+        composeTestRule.onNodeWithText(testWeatherExtendedDataUi.main.pressure).assertExists()
+        composeTestRule.onNodeWithContentDescription("pressureIcon").assertExists()
+        composeTestRule.onNodeWithText(testWeatherExtendedDataUi.main.humidity).assertExists()
+        composeTestRule.onNodeWithContentDescription("humidityIcon").assertExists()
+        composeTestRule.onNodeWithText(testWeatherExtendedDataUi.wind.speed).assertExists()
+        composeTestRule.onNodeWithContentDescription("windIcon").assertExists()
     }
 }
 

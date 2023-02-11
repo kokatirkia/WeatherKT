@@ -1,4 +1,4 @@
-package com.example.weather.ui.screens.commoncomponents
+package com.example.weather.ui.screens.extendedweathercomponents
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -20,32 +20,26 @@ fun PHWRow(pressure: String, humidity: String, windSpeed: String) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painterResource(R.drawable.pressure),
-                contentDescription = null,
-                modifier = Modifier.size(25.dp)
+                contentDescription = "pressureIcon",
+                modifier = Modifier.size(35.dp)
             )
             Text(text = "Pressure", color = Color.White)
-            Text(
-                text = pressure,
-                color = Color.White
-            )
+            Text(text = pressure, color = Color.White)
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painterResource(R.drawable.humidity),
-                contentDescription = null,
-                modifier = Modifier.size(25.dp)
+                contentDescription = "humidityIcon",
+                modifier = Modifier.size(35.dp)
             )
             Text(text = "Humidity", color = Color.White)
-            Text(
-                text = humidity,
-                color = Color.White
-            )
+            Text(text = humidity, color = Color.White)
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painterResource(R.drawable.wind),
-                contentDescription = null,
-                modifier = Modifier.size(25.dp)
+                contentDescription = "windIcon",
+                modifier = Modifier.size(35.dp)
             )
             Text(text = "Wind", color = Color.White)
             Text(text = windSpeed, color = Color.White)

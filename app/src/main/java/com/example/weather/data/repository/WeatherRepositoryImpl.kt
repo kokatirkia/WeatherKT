@@ -27,18 +27,18 @@ class WeatherRepositoryImpl @Inject constructor(
             city
         }
 
-        val apiCurrentWeather = weatherApi.getCurrentWeather(
+        val currentWeatherResponse = weatherApi.getCurrentWeather(
             cityName,
             Constants.units,
             Constants.ApiKey
         )
-        val apiExtendedWeather = weatherApi.getExtendedWeather(
+        val extendedWeatherResponse = weatherApi.getExtendedWeather(
             cityName,
             Constants.units,
             Constants.ApiKey
         )
 
-        return WeatherResponse(apiCurrentWeather, apiExtendedWeather).toWeatherDomain()
+        return WeatherResponse(currentWeatherResponse, extendedWeatherResponse).toWeatherDomain()
     }
 
     override suspend fun saveWeatherInLocalDatabase(weather: Weather) {

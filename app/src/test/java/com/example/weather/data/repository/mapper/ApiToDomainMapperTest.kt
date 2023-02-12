@@ -10,38 +10,84 @@ class ApiToDomainMapperTest {
         val weatherResponse = WeatherApiFactory.makeWeatherResponse()
         val weatherDomain = weatherResponse.toWeatherDomain()
 
-        assertEquals(WeatherApiFactory.main, weatherDomain.currentWeather.weather[0].main)
         assertEquals(
-            WeatherApiFactory.description,
+            weatherResponse.currentWeatherResponse.weather[0].main,
+            weatherDomain.currentWeather.weather[0].main
+        )
+        assertEquals(
+            weatherResponse.currentWeatherResponse.weather[0].description,
             weatherDomain.currentWeather.weather[0].description
         )
-        assertEquals(WeatherApiFactory.icon, weatherDomain.currentWeather.weather[0].icon)
-        assertEquals(WeatherApiFactory.temp, weatherDomain.currentWeather.main.temp, 0.0)
-        assertEquals(WeatherApiFactory.feelsLike, weatherDomain.currentWeather.main.feelsLike)
-        assertEquals(WeatherApiFactory.pressure, weatherDomain.currentWeather.main.pressure)
-        assertEquals(WeatherApiFactory.humidity, weatherDomain.currentWeather.main.humidity)
-        assertEquals(WeatherApiFactory.speed, weatherDomain.currentWeather.wind.speed, 0.0)
-        assertEquals(WeatherApiFactory.sunrise, weatherDomain.currentWeather.sys.sunrise)
-        assertEquals(WeatherApiFactory.sunset, weatherDomain.currentWeather.sys.sunset)
-        assertEquals(WeatherApiFactory.dt, weatherDomain.currentWeather.dt)
-        assertEquals(WeatherApiFactory.name, weatherDomain.currentWeather.name)
-        assertEquals(WeatherApiFactory.dt, weatherDomain.extendedWeather.list[0].dt)
-        assertEquals(WeatherApiFactory.temp, weatherDomain.extendedWeather.list[0].main.temp, 0.0)
         assertEquals(
-            WeatherApiFactory.pressure,
+            weatherResponse.currentWeatherResponse.weather[0].icon,
+            weatherDomain.currentWeather.weather[0].icon
+        )
+        assertEquals(
+            weatherResponse.currentWeatherResponse.main.temp,
+            weatherDomain.currentWeather.main.temp,
+            0.0
+        )
+        assertEquals(
+            weatherResponse.currentWeatherResponse.main.feelsLike,
+            weatherDomain.currentWeather.main.feelsLike
+        )
+        assertEquals(
+            weatherResponse.currentWeatherResponse.main.pressure,
+            weatherDomain.currentWeather.main.pressure
+        )
+        assertEquals(
+            weatherResponse.currentWeatherResponse.main.humidity,
+            weatherDomain.currentWeather.main.humidity
+        )
+        assertEquals(
+            weatherResponse.currentWeatherResponse.wind.speed,
+            weatherDomain.currentWeather.wind.speed,
+            0.0
+        )
+        assertEquals(
+            weatherResponse.currentWeatherResponse.sys.sunrise,
+            weatherDomain.currentWeather.sys.sunrise
+        )
+        assertEquals(
+            weatherResponse.currentWeatherResponse.sys.sunset,
+            weatherDomain.currentWeather.sys.sunset
+        )
+        assertEquals(weatherResponse.currentWeatherResponse.dt, weatherDomain.currentWeather.dt)
+        assertEquals(weatherResponse.currentWeatherResponse.name, weatherDomain.currentWeather.name)
+        assertEquals(
+            weatherResponse.extendedWeatherResponse.list[0].dt,
+            weatherDomain.extendedWeather.list[0].dt
+        )
+        assertEquals(
+            weatherResponse.extendedWeatherResponse.list[0].main.temp,
+            weatherDomain.extendedWeather.list[0].main.temp,
+            0.0
+        )
+        assertEquals(
+            weatherResponse.extendedWeatherResponse.list[0].main.pressure,
             weatherDomain.extendedWeather.list[0].main.pressure
         )
         assertEquals(
-            WeatherApiFactory.humidity,
+            weatherResponse.extendedWeatherResponse.list[0].main.humidity,
             weatherDomain.extendedWeather.list[0].main.humidity
         )
-        assertEquals(WeatherApiFactory.dtTxt, weatherDomain.extendedWeather.list[0].dtTxt)
         assertEquals(
-            WeatherApiFactory.description,
+            weatherResponse.extendedWeatherResponse.list[0].dtTxt,
+            weatherDomain.extendedWeather.list[0].dtTxt
+        )
+        assertEquals(
+            weatherResponse.extendedWeatherResponse.list[0].weather[0].description,
             weatherDomain.extendedWeather.list[0].weather[0].description
         )
-        assertEquals(WeatherApiFactory.icon, weatherDomain.extendedWeather.list[0].weather[0].icon)
-        assertEquals(WeatherApiFactory.speed, weatherDomain.extendedWeather.list[0].wind.speed, 0.0)
+        assertEquals(
+            weatherResponse.extendedWeatherResponse.list[0].weather[0].icon,
+            weatherDomain.extendedWeather.list[0].weather[0].icon
+        )
+        assertEquals(
+            weatherResponse.extendedWeatherResponse.list[0].wind.speed,
+            weatherDomain.extendedWeather.list[0].wind.speed,
+            0.0
+        )
     }
 }
 

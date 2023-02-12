@@ -39,7 +39,7 @@ class WeatherRepositoryImplTest {
     @Before
     fun setup() = runTest {
         currentWeatherResponse = WeatherApiFactory.makeCurrentWeatherResponse()
-        extendedWeatherResponse = WeatherApiFactory.makeExtendedWeatherApi()
+        extendedWeatherResponse = WeatherApiFactory.makeExtendedWeatherResponse()
         whenever(weatherApi.getCurrentWeather(any(), any(), any())).thenReturn(
             currentWeatherResponse
         )

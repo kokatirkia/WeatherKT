@@ -6,7 +6,7 @@ import org.junit.Test
 
 class ApiToDomainMapperTest {
     @Test
-    fun test() {
+    fun testApiToDomainMapping() {
         val weatherResponse = WeatherApiFactory.makeWeatherResponse()
         val weatherDomain = weatherResponse.toWeatherDomain()
 

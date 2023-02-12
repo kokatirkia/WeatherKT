@@ -3,49 +3,39 @@ package com.example.weather.data.repository
 import com.example.weather.domain.model.CurrentWeather
 import com.example.weather.domain.model.ExtendedWeather
 import com.example.weather.domain.model.Weather
-import java.util.*
-import java.util.concurrent.ThreadLocalRandom
 
 object WeatherFactory {
-    private fun makeRandomString() = UUID.randomUUID().toString()
-
-    private fun makeRandomInt() =
-        ThreadLocalRandom.current().nextInt(0, 1000 + 1)
-
-    private fun makeRandomDouble() =
-        ThreadLocalRandom.current().nextDouble(0.0, 1000.0 + 1.0)
-
-    private fun makeRandomLong() =
-        ThreadLocalRandom.current().nextLong(0L, 1000L + 1L)
+    private const val main = "Clear"
+    private const val description = "clear"
+    private const val icon = "01n"
+    private const val temp = 8.84
+    private const val feelsLike = "8.84"
+    private const val pressure = 1018
+    private const val humidity = 49
+    private const val speed = 8.23
+    private const val dt = 1641391386L
+    private const val dtTxt = "2023-02-11 18:00:00"
+    private const val sunrise = 1641356867L
+    private const val sunset = 1641390223L
+    private const val name: String = "Tbilisi"
 
     fun makeWeather() = Weather(
         currentWeather = CurrentWeather(
-            listOf(
-                CurrentWeather.Weather(
-                    makeRandomString(),
-                    makeRandomString(),
-                    makeRandomString()
-                )
-            ),
-            CurrentWeather.Main(
-                makeRandomDouble(),
-                makeRandomString(),
-                makeRandomInt(),
-                makeRandomInt()
-            ),
-            CurrentWeather.Wind(makeRandomDouble()),
-            CurrentWeather.Sys(makeRandomLong(), makeRandomLong()),
-            makeRandomLong(),
-            makeRandomString()
+            listOf(CurrentWeather.Weather(main, description, icon)),
+            CurrentWeather.Main(temp, feelsLike, pressure, humidity),
+            CurrentWeather.Wind(speed),
+            CurrentWeather.Sys(sunrise, sunset),
+            dt,
+            name
         ),
         extendedWeather = ExtendedWeather(
             listOf(
                 ExtendedWeather.WeatherItem(
-                    makeRandomLong(),
-                    ExtendedWeather.Main(makeRandomDouble(), makeRandomInt(), makeRandomInt()),
-                    makeRandomString(),
-                    listOf(ExtendedWeather.Weather(makeRandomString(), makeRandomString())),
-                    ExtendedWeather.Wind(makeRandomDouble())
+                    dt,
+                    ExtendedWeather.Main(temp, pressure, humidity),
+                    dtTxt,
+                    listOf(ExtendedWeather.Weather(description, icon)),
+                    ExtendedWeather.Wind(speed)
                 )
             )
         )

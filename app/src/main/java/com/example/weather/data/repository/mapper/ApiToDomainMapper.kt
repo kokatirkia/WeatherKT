@@ -7,7 +7,7 @@ import com.example.weather.domain.model.Weather
 
 fun WeatherResponse.toWeatherDomain() = Weather(
     currentWeather = CurrentWeather(
-        weather = currentWeatherApi.weather.map {
+        weather = currentWeatherResponse.weather.map {
             CurrentWeather.Weather(
                 main = it.main,
                 description = it.description,
@@ -15,21 +15,21 @@ fun WeatherResponse.toWeatherDomain() = Weather(
             )
         },
         main = CurrentWeather.Main(
-            temp = currentWeatherApi.main.temp,
-            feelsLike = currentWeatherApi.main.feelsLike,
-            pressure = currentWeatherApi.main.pressure,
-            humidity = currentWeatherApi.main.humidity
+            temp = currentWeatherResponse.main.temp,
+            feelsLike = currentWeatherResponse.main.feelsLike,
+            pressure = currentWeatherResponse.main.pressure,
+            humidity = currentWeatherResponse.main.humidity
         ),
-        wind = CurrentWeather.Wind(speed = currentWeatherApi.wind.speed),
+        wind = CurrentWeather.Wind(speed = currentWeatherResponse.wind.speed),
         sys = CurrentWeather.Sys(
-            sunrise = currentWeatherApi.sys.sunrise,
-            sunset = currentWeatherApi.sys.sunset
+            sunrise = currentWeatherResponse.sys.sunrise,
+            sunset = currentWeatherResponse.sys.sunset
         ),
-        dt = currentWeatherApi.dt,
-        name = currentWeatherApi.name
+        dt = currentWeatherResponse.dt,
+        name = currentWeatherResponse.name
     ),
     extendedWeather = ExtendedWeather(
-        list = extendedWeatherApi.list.map {
+        list = extendedWeatherResponse.list.map {
             ExtendedWeather.WeatherItem(
                 dt = it.dt,
                 main = ExtendedWeather.Main(
